@@ -5,7 +5,7 @@ open Fable.SimpleHttp
 open Feliz
 open Feliz.Plotly
 
-let render (data: float [] []) =
+let render (data: float [] []) : ReactElement =
     Plotly.plot [
         plot.traces [
             traces.surface [
@@ -26,7 +26,8 @@ let render (data: float [] []) =
         ]
     ]
 
-let chart' = React.functionComponent (fun (input: {| centeredSpinner: ReactElement |}) ->
+[<ReactComponent>]
+let chart (centeredSpinner: ReactElement) : ReactElement =
     let isLoading, setLoading = React.useState false
     let error, setError = React.useState<Option<string>> None
     let content, setContent = React.useState [||]
@@ -55,12 +56,10 @@ let chart' = React.functionComponent (fun (input: {| centeredSpinner: ReactEleme
     React.useEffect(loadDataset, [| path :> obj |])
 
     match isLoading, error with
-    | true, _ -> input.centeredSpinner
+    | true, _ -> centeredSpinner
     | false, None -> render content
     | _, Some error ->
         Html.h1 [
             prop.style [ style.color.crimson ]
             prop.text error
-        ])
-
-let chart (centeredSpinner: ReactElement) = chart' {| centeredSpinner = centeredSpinner |}
+        ]

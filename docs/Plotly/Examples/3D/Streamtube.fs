@@ -5,7 +5,7 @@ open Fable.SimpleHttp
 open Feliz
 open Feliz.Plotly
 
-let render (data: float [] []) =
+let render (data: float [] []) : ReactElement =
     let startsX = Array.replicate 16 80
 
     let startsY =
@@ -21,12 +21,12 @@ let render (data: float [] []) =
     Plotly.plot [
         plot.traces [
             traces.streamtube [
-                streamtube.x data.[3]
-                streamtube.y data.[4]
-                streamtube.z data.[5]
-                streamtube.u data.[0]
-                streamtube.v data.[1]
-                streamtube.w data.[2]
+                streamtube.x data[3]
+                streamtube.y data[4]
+                streamtube.z data[5]
+                streamtube.u data[0]
+                streamtube.v data[1]
+                streamtube.w data[2]
 
                 streamtube.starts [
                     starts.x startsX
@@ -58,7 +58,8 @@ let render (data: float [] []) =
         ]
     ]
 
-let chart' = React.functionComponent (fun (input: {| centeredSpinner: ReactElement |}) ->
+[<ReactComponent>]
+let chart (centeredSpinner: ReactElement) =
     let isLoading, setLoading = React.useState false
     let error, setError = React.useState<Option<string>> None
     let content, setContent = React.useState [||]
@@ -88,7 +89,7 @@ let chart' = React.functionComponent (fun (input: {| centeredSpinner: ReactEleme
     React.useEffect(loadDataset, [| path :> obj |])
 
     match isLoading, error with
-    | true, _ -> input.centeredSpinner
+    | true, _ -> centeredSpinner
     | false, None when Array.isEmpty content |> not -> render content
     | _, Some error ->
         Html.h1 [
@@ -98,6 +99,4 @@ let chart' = React.functionComponent (fun (input: {| centeredSpinner: ReactEleme
     | _ -> Html.h1 [
             prop.style [ style.color.crimson ]
             prop.text "Failed to load data."
-        ])
-
-let chart (centeredSpinner: ReactElement) = chart' {| centeredSpinner = centeredSpinner |}
+        ]

@@ -4,7 +4,7 @@ module Samples.ThreeDimensional.Cone
 open Feliz
 open Feliz.Plotly
 
-let chart () =
+let chart () : ReactElement =
     let plotTraces =
         [ "base", 1, []
           "opacity:0.3", 2, [ cone.opacity 0.3 ]

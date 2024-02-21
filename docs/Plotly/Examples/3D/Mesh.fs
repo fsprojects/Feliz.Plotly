@@ -6,13 +6,13 @@ open Feliz.Plotly
 
 let rng = System.Random()
 
-let xData,yData,zData =
+let xData, yData, zData =
     [ 0 .. 49 ]
     |> List.fold (fun (x,y,z) _ ->
         (rng.NextDouble()::x,rng.NextDouble()::y,rng.NextDouble()::z)
     ) ([],[],[])
 
-let chart () =
+let chart () : ReactElement =
     Plotly.plot [
         plot.traces [
             traces.mesh3d [
