@@ -1,6 +1,6 @@
 var ghPages = require("gh-pages");
 
-var packageUrl = "https://github.com/EverybodyKurts/Feliz.Plotly.git";
+var packageUrl = "https://github.com/fsprojects/Feliz.Plotly.git";
 
 console.log("Publishing to ", packageUrl);
 
