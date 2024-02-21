@@ -7,8 +7,7 @@ CONTAINER_ALREADY_STARTED="CONTAINER_STARTED"
 if [ ! -e $CONTAINER_ALREADY_STARTED ]; then
     dotnet tool restore
     dotnet paket restore
-    # dotnet paket install
-    # dotnet build
+    yarn
 
     sudo touch $CONTAINER_ALREADY_STARTED
 fi
