@@ -4,7 +4,7 @@ Fable bindings for [plotly.js](https://github.com/plotly/plotly.js) and [react-p
 
 Lets you build visualizations in an easy, discoverable, and safe fashion.
 
-See the full documentation with live examples [here](https://everybodykurts.github.io/Feliz.Plotly/).
+See the full documentation with live examples [here](https://fsprojects.github.io/Feliz.Plotly/).
 
 A quick look:
 
@@ -35,3 +35,15 @@ Plotly.plot [
     ]
 ]
 ```
+
+## Architecture / Code Layout
+
+This repo has three main projects:
+
+1. `Feliz.Generator.Plotly` - Used to generate the `Feliz.Plotly` project.
+2. `Feliz.Plotly` - The generated project resulting from running the generator
+3. `App` - This is the application used to display documentation for `Feliz.Plotly`.
+
+## Development / Contributing
+
+This repository makes extensive use of `vscode`'s development containers feature. You can use this with Github codespaces to boot up a development environment in your browser.
