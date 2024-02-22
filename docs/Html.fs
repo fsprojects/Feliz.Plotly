@@ -438,7 +438,7 @@ let renderMarkdown (input: {| path: string; content: string |}) : ReactElement =
     let githubPath (rawPath: string) : string =
         let parts = rawPath.Split('/')
         if parts.Length > 5
-        then sprintf "http://www.github.com/%s/%s" parts.[3] parts.[4]
+        then sprintf "http://www.github.com/%s/%s" parts[3] parts[4]
         else rawPath
 
     Html.div [
