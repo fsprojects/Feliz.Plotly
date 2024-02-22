@@ -4,12 +4,12 @@ module Samples.Bar.HoverText
 open Feliz
 open Feliz.Plotly
 
-let chart () =
+let chart () : ReactElement =
     Plotly.plot [
         plot.traces [
             traces.bar [
                 bar.x [ "Liam"; "Sophie"; "Jacob"; "Mia"; "William"; "Olivia" ]
-                bar.y [ 8.0; 8.0; 12.0; 12.0; 13.0; 20.0 ]
+                bar.y [ 8.; 8.; 12.; 12.; 13.; 20. ]
                 bar.text [ "4.17 below the mean"; "4.17 below the mean"; "0.17 below the mean"; "0.17 below the mean"; "0.83 above the mean"; "7.83 above the mean" ]
                 bar.marker [
                     marker.color (color.rgb(142, 124, 195))

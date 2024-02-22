@@ -20,13 +20,13 @@ type Msg =
 
 let init = { ColorScheme = Markers }
 
-let update (state: State) = function
-    | ChangeScheme colorScheme -> { state with ColorScheme = colorScheme }
+let update (state: State) (ChangeScheme colorScheme) : State =
+    { state with ColorScheme = colorScheme }
 
 let labels = [ "A1"; "A2"; "A3"; "A4"; "A5"; "B1"; "B2" ]
 let parents = [ ""; "A1"; "A2"; "A3"; "A4"; ""; "B1" ]
 
-let markersChart () =
+let markersChart () : ReactElement =
     Plotly.plot [
         plot.traces [
             traces.treemap [
@@ -47,7 +47,7 @@ let markersChart () =
         ]
     ]
 
-let colorwayChart () =
+let colorwayChart () : ReactElement =
     Plotly.plot [
         plot.traces [
             traces.treemap [
@@ -63,7 +63,7 @@ let colorwayChart () =
         ]
     ]
 
-let colorscaleChart () =
+let colorscaleChart () : ReactElement =
     Plotly.plot [
         plot.traces [
             traces.treemap [
@@ -77,7 +77,8 @@ let colorscaleChart () =
         ]
     ]
 
-let chart = React.functionComponent (fun () ->
+[<ReactComponent>]
+let chart () : ReactElement =
     let (state, dispatch) = React.useReducer(update, init)
 
     Html.div [
@@ -109,4 +110,4 @@ let chart = React.functionComponent (fun () ->
                 ]
             ]
         ]
-    ])
+    ]

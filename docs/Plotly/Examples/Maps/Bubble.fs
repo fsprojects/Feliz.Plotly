@@ -10,14 +10,15 @@ type USCities =
       Names: string []
       Population: int []
       Lat: float []
-      Lon: float [] }
+      Long: float [] }
 
-    member this.AddDataSet (data: string []) =
+    member this.AddDataSet (data: string []) : USCities =
         { this with
-            Names = Array.append this.Names (data.[0] |> Array.singleton)
-            Population = Array.append this.Population (data.[1] |> int |> Array.singleton)
-            Lat = Array.append this.Lat (data.[2] |> float |> Array.singleton)
-            Lon = Array.append this.Lon (data.[3] |> float |> Array.singleton) }
+            Names      = [| yield! this.Names; data[0] |]
+            Population = [| yield! this.Population; (data[1] |> int) |]
+            Lat  = [| yield! this.Lat; (data[2] |> float) |]
+            Long = [| yield! this.Lat; (data[2] |> float) |]
+        }
 
 module USCities =
     let empty =
@@ -25,23 +26,24 @@ module USCities =
           Names = [||]
           Population = [||]
           Lat = [||]
-          Lon = [||] }
+          Long = [||] }
 
-let render = React.memo (fun (data: USCities) ->
+[<ReactMemoComponent>]
+let render (data: USCities) : ReactElement =
 
     let hoverText, bubbleSize =
         React.useMemo ((fun () ->
             List.foldBack2 (fun name pop (hoverText, bubbleSize) ->
-                ((sprintf "%s pop: %i" name pop)::hoverText, (pop / 50000)::bubbleSize)
+                ($"{name} pop: {pop}"::hoverText, (pop / 50000)::bubbleSize)
             ) (data.Names |> List.ofArray) (data.Population |> List.ofArray) ([], [])
         ), [| data |])
-        
+
     Plotly.plot [
         plot.traces [
             traces.scattergeo [
                 scattergeo.locationmode.USAStates
                 scattergeo.lat data.Lat
-                scattergeo.lon data.Lon
+                scattergeo.lon data.Long
                 scattergeo.hoverinfo.text
                 scattergeo.text hoverText
                 scattergeo.marker [
@@ -65,31 +67,32 @@ let render = React.memo (fun (data: USCities) ->
                 ]
                 geo.showland true
                 geo.landcolor (color.rgb(217, 217, 217))
-                
+
                 geo.subunitwidth 1
                 geo.subunitcolor (color.rgb(255, 255, 255))
-                
+
                 geo.countrywidth 1
                 geo.countrycolor (color.rgb(255, 255, 255))
             ]
         ]
-    ])
+    ]
 
-let chart' = React.functionComponent (fun (input: {| centeredSpinner: ReactElement |}) ->
+[<ReactComponent>]
+let chart (centeredSpinner: ReactElement) : ReactElement =
     let isLoading, setLoading = React.useState false
     let error, setError = React.useState<Option<string>> None
     let content, setContent = React.useState USCities.empty
     let path = "https://raw.githubusercontent.com/plotly/datasets/master/2014_us_cities.csv"
 
-    let loadDataset() = 
+    let loadDataset() =
         setLoading(true)
         async {
             let! (statusCode, responseText) = Http.get path
             setLoading(false)
             if statusCode = 200 then
                 let fullData =
-                    responseText.Trim().Split('\n') 
-                    |> Array.map (fun s -> s.Split(','))
+                    responseText.Trim().Split('\n')
+                    |> Array.map _.Split(',')
 
                 fullData
                 |> Array.tail
@@ -105,12 +108,10 @@ let chart' = React.functionComponent (fun (input: {| centeredSpinner: ReactEleme
     React.useEffect(loadDataset, [| path :> obj |])
 
     match isLoading, error with
-    | true, _ -> input.centeredSpinner
+    | true, _ -> centeredSpinner
     | false, None -> render content
     | _, Some error ->
         Html.h1 [
             prop.style [ style.color.crimson ]
             prop.text error
-        ])
-
-let chart (centeredSpinner: ReactElement) = chart' {| centeredSpinner = centeredSpinner |}
+        ]

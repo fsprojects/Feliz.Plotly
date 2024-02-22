@@ -9,23 +9,23 @@ let rng = Random()
 
 type GanttData =
     { Task: string
-      Start: System.DateTime
-      Finish: System.DateTime }
+      Start: DateTime
+      Finish: DateTime }
 
 type Task =
-    { x0: System.DateTime
-      x1: System.DateTime
+    { x0: DateTime
+      x1: DateTime
       y0: float
       y1: float
       name: string }
 
-let chart () =
+let chart () : ReactElement =
     let tasks =
         [ 0 .. 20 ]
         |> List.map (fun i ->
             let month = rng.Next(1,12)
             let start = rng.Next(1, 29)
-            { Task = sprintf "Task %i" i
+            { Task = $"Task {i}"
               Start = DateTime(2019, (if month > 1 then month-1 else month), start)
               Finish = DateTime(2019, month, rng.Next(start, 30)) })
         |> List.rev
@@ -36,13 +36,12 @@ let chart () =
               y1 = (float i) + 0.4
               name = gd.Task })
 
-    let getCornerPoints task =
+    let getCornerPoints (task: Task) =
         {| x = [ task.x0; task.x1; task.x1; task.x0 ]
            y = [ task.y0; task.y0; task.y1; task.y1 ] |}
 
-    let scatters =
-        tasks
-        |> List.map (fun task ->
+    let scatters : ITracesProperty list =
+        [ for task in tasks do
             let cps = getCornerPoints task
             traces.scatter [
                 scatter.x cps.x
@@ -51,7 +50,8 @@ let chart () =
                 scatter.fill.toself
                 scatter.hoverinfo.name
                 scatter.name task.name
-            ])
+            ]
+        ]
 
     Plotly.plot [
         plot.style [

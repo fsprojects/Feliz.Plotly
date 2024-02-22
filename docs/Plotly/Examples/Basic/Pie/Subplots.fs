@@ -18,15 +18,15 @@ let piecolor =
       [ color.rgb(33, 75, 99); color.rgb(79, 129, 102); color.rgb(151, 179, 100); color.rgb(175, 49, 35); color.rgb(36, 73, 147) ]
       [ color.rgb(146, 123, 21); color.rgb(177, 180, 34); color.rgb(206, 206, 40); color.rgb(175, 51, 21); color.rgb(35, 36, 21) ] ]
 
-let chart () =
+let chart () : ReactElement =
     Plotly.plot [
         plot.traces [
             traces.pie [
-                pie.values values.[0]
+                pie.values values[0]
                 pie.labels labels
                 pie.name "Starry Night"
                 pie.marker [
-                    marker.colors piecolor.[0]
+                    marker.colors piecolor[0]
                 ]
                 pie.domain [
                     domain.row 0
@@ -40,11 +40,11 @@ let chart () =
                 pie.textinfo.none
             ]
             traces.pie [
-                pie.values values.[1]
+                pie.values values[1]
                 pie.labels labels
                 pie.name "Sunflowers"
                 pie.marker [
-                    marker.colors piecolor.[1]
+                    marker.colors piecolor[1]
                 ]
                 pie.domain [
                     domain.row 1
@@ -58,11 +58,11 @@ let chart () =
                 pie.textinfo.none
             ]
             traces.pie [
-                pie.values values.[2]
+                pie.values values[2]
                 pie.labels labels
                 pie.name "Irises"
                 pie.marker [
-                    marker.colors piecolor.[2]
+                    marker.colors piecolor[2]
                 ]
                 pie.domain [
                     domain.row 0
@@ -76,7 +76,7 @@ let chart () =
                 pie.textinfo.none
             ]
             traces.pie [
-                pie.values values.[3]
+                pie.values values[3]
                 pie.labels labels
                 pie.name "The Night Cafe"
                 pie.marker [

@@ -4,27 +4,27 @@ module Samples.Waterfall.MultiCategory
 open Feliz
 open Feliz.Plotly
 
-let xData = 
+let xData =
     [ [ "2016"; "2017"; "2017"; "2017"; "2017"; "2018"; "2018"; "2018"; "2018" ]
       [ "initial"; "q1"; "q2"; "q3"; "total"; "q1"; "q2"; "q3"; "total" ] ]
 
-let measureData = 
+let measureData =
     [ measure.absolute; measure.relative; measure.relative; measure.relative
       measure.total; measure.relative; measure.relative; measure.relative; measure.total ]
 
 let yData = [ Some 1; Some 2; Some 3; Some -1; None; Some 1; Some 2; Some -4; None ]
-    
+
 let xData2 =
     [ ["2016"; "2017"; "2017"; "2017"; "2017"; "2018"; "2018"; "2018"; "2018"]
       ["initial"; "q1"; "q2"; "q3"; "total"; "q1"; "q2"; "q3"; "total" ] ]
-    
-let measureData2 =
+
+let measureData2 : IMeasureProperty list =
     [ measure.absolute; measure.relative; measure.relative; measure.relative; measure.total
       measure.relative; measure.relative; measure.relative; measure.total ]
-    
+
 let yData2 = [ Some 1.1; Some 2.2; Some 3.3; Some -1.1; None; Some 1.1; Some 2.2; Some -4.4; None ]
 
-let chart () =
+let chart () : ReactElement =
     Plotly.plot [
         plot.traces [
             traces.waterfall [

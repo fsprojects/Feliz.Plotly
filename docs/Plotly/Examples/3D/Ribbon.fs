@@ -25,7 +25,7 @@ type RibbonJson =
     { data: RibbonData []
       layout: string }
 
-let render (data: RibbonData list) =
+let render (data: RibbonData list) : ReactElement =
     let plotTraces =
         data
         |> List.map (fun d ->
@@ -65,7 +65,8 @@ let render (data: RibbonData list) =
         ]
     ]
 
-let chart' = React.functionComponent (fun (input: {| centeredSpinner: ReactElement |}) ->
+[<ReactComponent>]
+let chart (centeredSpinner: ReactElement) : ReactElement =
     let isLoading, setLoading = React.useState false
     let error, setError = React.useState<Option<string>> None
     let content, setContent = React.useState None
@@ -101,7 +102,7 @@ let chart' = React.functionComponent (fun (input: {| centeredSpinner: ReactEleme
     React.useEffect(loadDataset, [| path :> obj |])
 
     match isLoading, error, content with
-    | true, _, _ -> input.centeredSpinner
+    | true, _, _ -> centeredSpinner
     | false, None, Some content -> render content
     | _, Some error, _ ->
         Html.h1 [
@@ -112,6 +113,4 @@ let chart' = React.functionComponent (fun (input: {| centeredSpinner: ReactEleme
         Html.h1 [
             prop.style [ style.color.crimson ]
             prop.text "Internal error with parsing json data"
-        ])
-
-let chart (centeredSpinner: ReactElement) = chart' {| centeredSpinner = centeredSpinner |}
+        ]

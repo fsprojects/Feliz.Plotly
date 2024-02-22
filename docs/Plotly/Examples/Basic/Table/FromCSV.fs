@@ -1,7 +1,6 @@
 ﻿[<RequireQualifiedAccess>]
 module Samples.Table.FromCSV
 
-open Fable.Core
 open Fable.SimpleHttp
 open Feliz
 open Feliz.Plotly
@@ -17,19 +16,19 @@ type BTCMiningData =
       CostPerTransactionUSD: int []
       MiningRevenueUSD: int []
       TransactionFeesBTC: int [] }
-    member this.AddDataSet (data: string []) =
+    member this.AddDataSet (data: string []) : BTCMiningData =
         { this with
-            Ids = Array.append this.Ids (data.[0] |> int |> Array.singleton)
-            Date = Array.append this.Date (data.[1].Substring(0,10) |> Array.singleton)
-            NumberTransactions = Array.append this.NumberTransactions (data.[2] |> int |> Array.singleton)
-            OutputVolue = Array.append this.OutputVolue (data.[3] |> int |> Array.singleton)
-            MarketPrice = Array.append this.MarketPrice (data.[4] |> int |> Array.singleton)
-            HashRate = Array.append this.HashRate (data.[5] |> int |> Array.singleton)
-            CostPerTransactionUSD = Array.append this.CostPerTransactionUSD (data.[6] |> int |> Array.singleton)
-            MiningRevenueUSD = Array.append this.MiningRevenueUSD (data.[7] |> int |> Array.singleton)
-            TransactionFeesBTC = Array.append this.TransactionFeesBTC (data.[8] |> int |> Array.singleton) }
+            Ids  = [| yield! this.Ids; (data[0] |> int) |]
+            Date = [| yield! this.Date; (data[1].Substring(0,10)) |]
+            NumberTransactions = [| yield! this.NumberTransactions; (data[2] |> int) |]
+            OutputVolue = [| yield! this.OutputVolue; (data[3] |> int) |]
+            MarketPrice = [| yield! this.MarketPrice; (data[4] |> int) |]
+            HashRate = [| yield! this.HashRate; (data[5] |> int) |]
+            CostPerTransactionUSD = [| yield! this.CostPerTransactionUSD; (data[6] |> int) |]
+            MiningRevenueUSD = [| yield! this.MiningRevenueUSD; (data[7] |> int) |]
+            TransactionFeesBTC = [| yield! this.TransactionFeesBTC; (data[8] |> int) |] }
 
-    member this.Values =
+    member this.Values : PlotData list =
         [ PlotData.Int this.Ids
           PlotData.String this.Date
           PlotData.Int this.NumberTransactions
@@ -41,7 +40,7 @@ type BTCMiningData =
           PlotData.Int this.TransactionFeesBTC ]
 
 module BTCMiningData =
-    let empty =
+    let empty : BTCMiningData =
         { Headers = [||]
           Ids = [||]
           Date = [||]
@@ -53,7 +52,7 @@ module BTCMiningData =
           MiningRevenueUSD = [||]
           TransactionFeesBTC = [||] }
 
-let render (data: BTCMiningData)  =
+let render (data: BTCMiningData) :ReactElement =
     Plotly.plot [
         plot.traces [
             traces.table [
@@ -105,7 +104,8 @@ let render (data: BTCMiningData)  =
         ]
     ]
 
-let chart' = React.functionComponent (fun (input: {| centeredSpinner: ReactElement |}) ->
+[<ReactComponent>]
+let chart (centeredSpinner: ReactElement) : ReactElement =
     let isLoading, setLoading = React.useState false
     let error, setError = React.useState<Option<string>> None
     let content, setContent = React.useState BTCMiningData.empty
@@ -119,7 +119,7 @@ let chart' = React.functionComponent (fun (input: {| centeredSpinner: ReactEleme
             if statusCode = 200 then
                 let fullData =
                     responseText.Trim().Split('\n')
-                    |> Array.map (fun s -> s.Split(','))
+                    |> Array.map _.Split(',')
 
                 fullData
                 |> Array.tail
@@ -135,12 +135,10 @@ let chart' = React.functionComponent (fun (input: {| centeredSpinner: ReactEleme
     React.useEffect(loadDataset, [| path :> obj |])
 
     match isLoading, error with
-    | true, _ -> input.centeredSpinner
+    | true, _ -> centeredSpinner
     | false, None -> render content
     | _, Some error ->
         Html.h1 [
             prop.style [ style.color.crimson ]
             prop.text error
-        ])
-
-let chart (centeredSpinner: ReactElement) = chart' {| centeredSpinner = centeredSpinner |}
+        ]

@@ -8,7 +8,7 @@ let xData = [ "Product A"; "Product B"; "Product C" ]
 let yData = [ 20; 14; 23 ]
 let yData2 = [ 24; 16; 20 ]
 
-let chart () =
+let chart () : ReactElement =
     Plotly.plot [
         plot.traces [
             traces.bar [

@@ -13,7 +13,8 @@ let alert s = jsNative
 let xData = [ 1 .. 100 ]
 let yData = xData |> List.map (fun _ -> rng.NextDouble())
 
-let chart = React.functionComponent (fun () ->
+[<ReactComponent>]
+let chart () : ReactElement =
     Plotly.plot [
         plot.traces [
             traces.scatter [
@@ -32,4 +33,4 @@ let chart = React.functionComponent (fun () ->
                     x System.Environment.NewLine x2
                 |> alert
             | _ -> ()
-    ])
+    ]

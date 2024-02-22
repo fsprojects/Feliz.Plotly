@@ -24,7 +24,7 @@ let xNetWorth =
       66090.179999999993
       122379.3 ]
 
-let y =
+let ys =
     [ "Japan"
       "United Kingdom"
       "Canada"
@@ -34,45 +34,44 @@ let y =
       "Sweden"
       "Switzerland" ]
 
-let dataAnns =
-    y
-    |> List.map3 (fun savings networth y ->
-        [ annotations.annotation [
-            annotation.xref.custom "x"
-            annotation.yref.custom "y"
-            annotation.x (savings + 2.3)
-            annotation.y y
-            annotation.text (sprintf "%.2f%s" savings "%")
-            annotation.font [
-                font.family font.arial
-                font.size 12
-                font.color (color.rgb(50, 171, 96))
+let dataAnnotationProperties : IAnnotationsProperty list =
+    [ for y, saving, networth in (List.zip3 ys xSavings xNetWorth) ->
+        [
+            annotations.annotation [
+                annotation.xref.custom "x"
+                annotation.yref.custom "y"
+                annotation.x (saving + 2.3)
+                annotation.y y
+                annotation.text (sprintf "%.2f%s" saving "%")
+                annotation.font [
+                    font.family font.arial
+                    font.size 12
+                    font.color (color.rgb(50, 171, 96))
+                ]
+                annotation.showarrow false
             ]
-            annotation.showarrow false
-          ]
-          annotations.annotation [
-            annotation.xref.custom "x2"
-            annotation.yref.custom "y"
-            annotation.x (networth - 20000.)
-            annotation.y y
-            annotation.text (sprintf "$ %0.2f M" networth)
-            annotation.font [
-                font.family font.arial
-                font.size 12
-                font.color (color.rgb(128, 0, 128))
+            annotations.annotation [
+                annotation.xref.custom "x2"
+                annotation.yref.custom "y"
+                annotation.x (networth - 20000.)
+                annotation.y y
+                annotation.text (sprintf "$ %0.2f M" networth)
+                annotation.font [
+                    font.family font.arial
+                    font.size 12
+                    font.color (color.rgb(128, 0, 128))
+                ]
+                annotation.showarrow false
             ]
-            annotation.showarrow false
-          ]
         ]
-    ) xSavings xNetWorth
-    |> List.concat
+    ] |> List.concat
 
-let chart () =
+let chart () : ReactElement =
     Plotly.plot [
         plot.traces [
             traces.bar [
                 bar.x xSavings
-                bar.y y
+                bar.y ys
                 bar.marker [
                     marker.color (color.rgba(50, 171, 96, 0.6))
                 ]
@@ -81,7 +80,7 @@ let chart () =
             ]
             traces.scatter [
                 scatter.x xNetWorth
-                scatter.y y
+                scatter.y ys
                 scatter.xaxis 2
                 scatter.mode [
                     scatter.mode.lines
@@ -150,7 +149,7 @@ let chart () =
                         font.color (color.rgb(150, 150, 150))
                     ]
                 ]
-                yield! dataAnns
+                yield! dataAnnotationProperties
             ]
         ]
     ]

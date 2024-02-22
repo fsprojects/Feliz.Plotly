@@ -20,22 +20,22 @@ type AppleStocks =
       Up: float []
       Direction: string [] }
 
-    member this.AddDataSet (data: string []) =
+    member this.AddDataSet (data: string []) : AppleStocks =
         { this with
-            Date = Array.append this.Date (data.[0] |> DateTime.Parse |> Array.singleton)
-            Open = Array.append this.Open (data.[1] |> float |> Array.singleton)
-            High = Array.append this.High (data.[2] |> float |> Array.singleton)
-            Low = Array.append this.Low (data.[3] |> float |> Array.singleton)
-            Close = Array.append this.Close (data.[4] |> float |> Array.singleton)
-            Volume = Array.append this.Volume (data.[5] |> float |> Array.singleton)
-            Adjusted = Array.append this.Adjusted (data.[6] |> float |> Array.singleton)
-            Down = Array.append this.Down (data.[7] |> float |> Array.singleton)
-            MovingAvg = Array.append this.MovingAvg (data.[8] |> float |> Array.singleton)
-            Up = Array.append this.Up (data.[9] |> float |> Array.singleton)
-            Direction = Array.append this.Direction (data.[10] |> Array.singleton) }
+            Date = [| yield! this.Date; (data[0] |> DateTime.Parse) |]
+            Open = [| yield! this.Open; (data[1] |> float) |]
+            High = [| yield! this.High; (data[2] |> float) |]
+            Low  = [| yield! this.Low;  (data[3] |> float) |]
+            Close  = [| yield! this.Close;  (data[4] |> float) |]
+            Volume = [| yield! this.Volume; (data[5] |> float) |]
+            Adjusted  = [| yield! this.Adjusted;  (data[6] |> float) |]
+            Down      = [| yield! this.Down;      (data[7] |> float) |]
+            MovingAvg = [| yield! this.MovingAvg; (data[8] |> float) |]
+            Up        = [| yield! this.Up;        (data[9] |> float) |]
+            Direction = [| yield! this.Direction; (data[10]) |] }
 
 module AppleStocks =
-    let empty =
+    let empty : AppleStocks =
         { Headers = [||]
           Date = [||]
           Open = [||]
@@ -49,7 +49,7 @@ module AppleStocks =
           Up = [||]
           Direction = [||] }
 
-let render (data: AppleStocks) =
+let render (data: AppleStocks) : ReactElement =
     Plotly.plot [
         plot.traces [
             traces.scatter [
@@ -78,21 +78,22 @@ let render (data: AppleStocks) =
         ]
     ]
 
-let chart' = React.functionComponent (fun (input: {| centeredSpinner: ReactElement |}) ->
+[<ReactComponent>]
+let chart (centeredSpinner: ReactElement) : ReactElement =
     let isLoading, setLoading = React.useState false
     let error, setError = React.useState<Option<string>> None
     let content, setContent = React.useState AppleStocks.empty
     let path = "https://raw.githubusercontent.com/plotly/datasets/master/finance-charts-apple.csv"
 
-    let loadDataset() = 
+    let loadDataset() =
         setLoading(true)
         async {
             let! (statusCode, responseText) = Http.get path
             setLoading(false)
             if statusCode = 200 then
                 let fullData =
-                    responseText.Trim().Split('\n') 
-                    |> Array.map (fun s -> s.Split(','))
+                    responseText.Trim().Split('\n')
+                    |> Array.map  _.Split(',')
 
                 fullData
                 |> Array.tail
@@ -108,12 +109,10 @@ let chart' = React.functionComponent (fun (input: {| centeredSpinner: ReactEleme
     React.useEffect(loadDataset, [| path :> obj |])
 
     match isLoading, error with
-    | true, _ -> input.centeredSpinner
+    | true, _ -> centeredSpinner
     | false, None -> render content
     | _, Some error ->
         Html.h1 [
             prop.style [ style.color.crimson ]
             prop.text error
-        ])
-
-let chart (centeredSpinner: ReactElement) = chart' {| centeredSpinner = centeredSpinner |}
+        ]

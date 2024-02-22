@@ -4,7 +4,7 @@ module Samples.Bar.Grouped
 open Feliz
 open Feliz.Plotly
 
-let chart () =
+let chart () : ReactElement =
     Plotly.plot [
         plot.traces [
             traces.bar [

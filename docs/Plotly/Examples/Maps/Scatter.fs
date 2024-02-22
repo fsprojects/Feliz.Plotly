@@ -10,32 +10,32 @@ type Precipitation =
       Hrapx: float []
       Hrapy: float []
       Lat: float []
-      Lon: float []
+      Long: float []
       Globvalue: string [] }
 
-    member this.AddDataSet (data: string []) =
+    member this.AddDataSet (data: string []) : Precipitation =
         { this with
-            Hrapx = Array.append this.Hrapx (data.[0] |> float |> Array.singleton)
-            Hrapy = Array.append this.Hrapy (data.[1] |> float |> Array.singleton)
-            Lat = Array.append this.Lat (data.[2] |> float |> Array.singleton)
-            Lon = Array.append this.Lon (data.[3] |> float |> Array.singleton)
-            Globvalue = Array.append this.Globvalue (data.[4] |> string |> Array.singleton) }
+            Hrapx = [| yield! this.Hrapx; (data[0] |> float) |]
+            Hrapy = [| yield! this.Hrapy; (data[1] |> float) |]
+            Lat   = [| yield! this.Lat;   (data[2] |> float) |]
+            Long  = [| yield! this.Long;  (data[3] |> float) |]
+            Globvalue = [| yield! this.Globvalue; (data[4] |> string) |] }
 
 module Precipitation =
-    let empty =
+    let empty : Precipitation =
         { Headers = [||]
           Hrapx = [||]
           Hrapy = [||]
           Lat = [||]
-          Lon = [||]
+          Long = [||]
           Globvalue = [||] }
 
-let render (data: Precipitation) =
+let render (data: Precipitation) : ReactElement =
     Plotly.plot [
         plot.traces [
             traces.scattermapbox [
                 scattermapbox.text data.Globvalue
-                scattermapbox.lon data.Lon
+                scattermapbox.lon data.Long
                 scattermapbox.lat data.Lat
                 scattermapbox.marker [
                     marker.color color.fuchsia
@@ -69,21 +69,22 @@ let render (data: Precipitation) =
         ]
     ]
 
-let chart' = React.functionComponent (fun (input: {| centeredSpinner: ReactElement |}) ->
+[<ReactComponent>]
+let chart (centeredSpinner: ReactElement) : ReactElement =
     let isLoading, setLoading = React.useState false
     let error, setError = React.useState<Option<string>> None
     let content, setContent = React.useState Precipitation.empty
     let path = "https://raw.githubusercontent.com/plotly/datasets/master/2015_06_30_precipitation.csv"
 
-    let loadDataset() = 
+    let loadDataset() =
         setLoading(true)
         async {
             let! (statusCode, responseText) = Http.get path
             setLoading(false)
             if statusCode = 200 then
                 let fullData =
-                    responseText.Trim().Split('\n') 
-                    |> Array.map (fun s -> s.Split(','))
+                    responseText.Trim().Split('\n')
+                    |> Array.map _.Split(',')
 
                 fullData
                 |> Array.tail
@@ -99,12 +100,10 @@ let chart' = React.functionComponent (fun (input: {| centeredSpinner: ReactEleme
     React.useEffect(loadDataset, [| path :> obj |])
 
     match isLoading, error with
-    | true, _ -> input.centeredSpinner
+    | true, _ -> centeredSpinner
     | false, None -> render content
     | _, Some error ->
         Html.h1 [
             prop.style [ style.color.crimson ]
             prop.text error
-        ])
-
-let chart (centeredSpinner: ReactElement) = chart' {| centeredSpinner = centeredSpinner |}
+        ]

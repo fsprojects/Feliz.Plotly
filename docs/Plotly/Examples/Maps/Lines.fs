@@ -10,7 +10,7 @@ let plotColors =
        color.rgb(254,224,139); color.rgb(255,255,191); color.rgb(230,245,152)
        color.rgb(171,221,164); color.rgb(102,194,165); color.rgb(50,136,189) |]
 
-let plotTraceBase (lineColor: string) (lat: float []) (lon: float []) = 
+let plotTraceBase (lineColor: string) (lat: float []) (lon: float []) : ITracesProperty =
     traces.scattergeo [
         scattergeo.lon lon
         scattergeo.lat lat
@@ -21,7 +21,7 @@ let plotTraceBase (lineColor: string) (lat: float []) (lon: float []) =
         ]
     ]
 
-let render (data: (string * float [] []) []) =
+let render (data: (string * float [] []) []) : ReactElement =
     Plotly.plot [
         plot.traces [
             yield!
@@ -42,7 +42,7 @@ let render (data: (string * float [] []) []) =
                 ]
                 geo.showocean true
                 geo.oceancolor (color.rgb(0, 255, 255))
-                
+
                 geo.showland true
                 geo.landcolor (color.rgb(230, 145, 56))
 
@@ -62,19 +62,20 @@ let render (data: (string * float [] []) []) =
         ]
     ]
 
-let chart' = React.functionComponent (fun (input: {| centeredSpinner: ReactElement |}) ->
+[<ReactComponent>]
+let chart (centeredSpinner: ReactElement) : ReactElement =
     let isLoading, setLoading = React.useState false
     let error, setError = React.useState<Option<string>> None
     let content, setContent = React.useState [||]
     let path = "https://raw.githubusercontent.com/plotly/datasets/master/globe_contours.csv"
 
-    let loadDataset() = 
+    let loadDataset() =
         setLoading(true)
         async {
             let! (statusCode, responseText) = Http.get path
             setLoading(false)
             if statusCode = 200 then
-                responseText.Trim().Split('\n') 
+                responseText.Trim().Split('\n')
                 |> Array.map (fun s -> s.Split(','))
                 |> Array.tail
                 |> Array.map (Array.map float)
@@ -85,19 +86,17 @@ let chart' = React.functionComponent (fun (input: {| centeredSpinner: ReactEleme
                 |> setContent
                 setError(None)
             else
-                setError(Some (sprintf "Status %d: could not load %s" statusCode path))
+                setError(Some $"Status {statusCode}: could not load {path}")
         }
         |> Async.StartImmediate
 
     React.useEffect(loadDataset, [| path :> obj |])
 
     match isLoading, error with
-    | true, _ -> input.centeredSpinner
+    | true, _ -> centeredSpinner
     | false, None -> render content
     | _, Some error ->
         Html.h1 [
             prop.style [ style.color.crimson ]
             prop.text error
-        ])
-
-let chart (centeredSpinner: ReactElement) = chart' {| centeredSpinner = centeredSpinner |}
+        ]
