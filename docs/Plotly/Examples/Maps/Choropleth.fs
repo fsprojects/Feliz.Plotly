@@ -10,18 +10,18 @@ type Precipitation =
       Location: string []
       Alcohol: float [] }
 
-    member this.AddDataSet (data: string []) =
+    member this.AddDataSet (data: string []) : Precipitation =
         { this with
-            Location = Array.append this.Location (data.[0] |> Array.singleton)
-            Alcohol = Array.append this.Alcohol (data.[1] |> float |> Array.singleton) }
+            Location = [| yield! this.Location; data[0] |]
+            Alcohol  = [| yield! this.Alcohol; (data[1] |> float) |] }
 
 module Precipitation =
-    let empty =
+    let empty : Precipitation =
         { Headers = [||]
           Location = [||]
           Alcohol = [||] }
 
-let render (data: Precipitation) =
+let render (data: Precipitation) : ReactElement =
     Plotly.plot [
         plot.traces [
             traces.choropleth [
@@ -44,21 +44,22 @@ let render (data: Precipitation) =
         ]
     ]
 
-let chart' = React.functionComponent (fun (input: {| centeredSpinner: ReactElement |}) ->
+[<ReactComponent>]
+let chart (centeredSpinner: ReactElement) : ReactElement =
     let isLoading, setLoading = React.useState false
     let error, setError = React.useState<Option<string>> None
     let content, setContent = React.useState Precipitation.empty
     let path = "https://raw.githubusercontent.com/plotly/datasets/master/2010_alcohol_consumption_by_country.csv"
 
-    let loadDataset() = 
+    let loadDataset() =
         setLoading(true)
         async {
             let! (statusCode, responseText) = Http.get path
             setLoading(false)
             if statusCode = 200 then
                 let fullData =
-                    responseText.Trim().Split('\n') 
-                    |> Array.map (fun s -> s.Split(','))
+                    responseText.Trim().Split('\n')
+                    |> Array.map  _.Split(',')
 
                 fullData
                 |> Array.tail
@@ -67,19 +68,17 @@ let chart' = React.functionComponent (fun (input: {| centeredSpinner: ReactEleme
                 |> setContent
                 setError(None)
             else
-                setError(Some (sprintf "Status %d: could not load %s" statusCode path))
+                setError(Some $"Status {statusCode}: could not load {path}")
         }
         |> Async.StartImmediate
 
     React.useEffect(loadDataset, [| path :> obj |])
 
     match isLoading, error with
-    | true, _ -> input.centeredSpinner
+    | true, _ -> centeredSpinner
     | false, None -> render content
     | _, Some error ->
         Html.h1 [
             prop.style [ style.color.crimson ]
             prop.text error
-        ])
-
-let chart (centeredSpinner: ReactElement) = chart' {| centeredSpinner = centeredSpinner |}
+        ]

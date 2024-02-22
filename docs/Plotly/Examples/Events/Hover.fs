@@ -1,7 +1,6 @@
 ﻿[<RequireQualifiedAccess>]
 module Samples.Events.Hover
 
-open Fable.Core
 open Feliz
 open Feliz.Plotly
 
@@ -10,7 +9,8 @@ let rng = System.Random()
 let getYData i =
     List.init 100 (fun _ -> rng.NextDouble() * (float i))
 
-let plotElem = React.memo(fun (input: {| callback: (int * float) option -> unit |}) ->
+[<ReactMemoComponent>]
+let plot (callback: (int * float) option -> unit) : ReactElement =
     Plotly.plot [
         plot.traces [
             traces.scatter [
@@ -42,11 +42,12 @@ let plotElem = React.memo(fun (input: {| callback: (int * float) option -> unit 
             |> List.tryFind (fun datum -> datum.x.IsSome && datum.y.IsSome)
             |> Option.iter(fun datum ->
                 match datum.x, datum.y with
-                | Events.Int x, Events.Float y -> (x,y) |> Some |> input.callback
-                | _ -> None |> input.callback)
-    ])
+                | Events.Int x, Events.Float y -> (x,y) |> Some |> callback
+                | _ -> None |> callback)
+    ]
 
-let chart = React.functionComponent (fun () ->
+[<ReactComponent>]
+let chart () : ReactElement =
     let hoverPoint,setHoverPoint = React.useState None
 
     let setPointCallback = React.useCallback(setHoverPoint)
@@ -55,8 +56,8 @@ let chart = React.functionComponent (fun () ->
         Html.div [
             match hoverPoint with
             | Some(x,y) ->
-                prop.text (sprintf "Hovered points: (%i, %f)" x y)
+                prop.text $"Hovered points: ({x}, {y})"
             | None -> ()
         ]
-        plotElem {| callback = setPointCallback |}
-    ])
+        plot setPointCallback
+    ]

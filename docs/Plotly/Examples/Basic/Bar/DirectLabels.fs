@@ -6,7 +6,7 @@ open Feliz.Plotly
 
 let yData = [ 20; 14; 23 ]
 
-let chart () =
+let chart () : ReactElement =
     Plotly.plot [
         plot.traces [
             traces.bar [

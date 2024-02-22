@@ -20,7 +20,7 @@ let votingPop = [40.; 45.7; 52.; 53.6; 54.1; 54.2; 54.5; 54.7; 55.1; 56.6]
 
 let regVoters = [49.1; 42.; 52.7; 84.3; 51.7; 61.1; 55.3; 64.2; 91.1; 58.9]
 
-let chart () =
+let chart () : ReactElement =
     Plotly.plot [
         plot.traces [
             traces.scatter [

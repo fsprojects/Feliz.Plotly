@@ -59,7 +59,7 @@ let parents =
       "Australia - Rugby"
       "Australia - Rugby" ]
 
-let chart () =
+let chart () : ReactElement =
     Plotly.plot [
         plot.traces [
             traces.sunburst [

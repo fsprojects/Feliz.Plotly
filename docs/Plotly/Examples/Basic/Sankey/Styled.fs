@@ -38,7 +38,7 @@ module EnergyData =
           LinkValue = [||]
           LinkLabel = [||] }
 
-let render (data: EnergyData) =
+let render (data: EnergyData) : ReactElement =
     Plotly.plot [
         plot.traces [
             traces.sankey [
@@ -81,13 +81,14 @@ let render (data: EnergyData) =
         ]
     ]
 
-let chart' = React.functionComponent (fun (input: {| centeredSpinner: ReactElement |}) ->
+[<ReactComponent>]
+let chart (centeredSpinner: ReactElement) : ReactElement =
     let isLoading, setLoading = React.useState false
     let error, setError = React.useState<Option<string>> None
     let content, setContent = React.useState EnergyData.empty
     let path = "https://raw.githubusercontent.com/plotly/plotly.js/master/test/image/mocks/sankey_energy_dark.json"
 
-    let loadDataset() = 
+    let loadDataset() =
         setLoading(true)
         async {
             let! (statusCode, responseText) = Http.get path
@@ -95,13 +96,13 @@ let chart' = React.functionComponent (fun (input: {| centeredSpinner: ReactEleme
             if statusCode = 200 then
                 responseText
                 |> Json.tryParseAs<JsonParsing.EnergyJson>
-                |> Result.bind (fun eJson -> 
+                |> Result.bind (fun eJson ->
                     match eJson.data |> Array.tryHead with
                     | Some data -> Ok data
                     | None -> Error "Failed to parse Data array")
                 |> function
-                | Ok res -> 
-                    { NodeLabel = res.node.label 
+                | Ok res ->
+                    { NodeLabel = res.node.label
                       LinkSource = res.link.source
                       LinkTarget = res.link.target
                       LinkValue = res.link.value
@@ -118,12 +119,10 @@ let chart' = React.functionComponent (fun (input: {| centeredSpinner: ReactEleme
     React.useEffect(loadDataset, [| path :> obj |])
 
     match isLoading, error with
-    | true, _ -> input.centeredSpinner
+    | true, _ -> centeredSpinner
     | false, None -> render content
     | _, Some error ->
         Html.h1 [
             prop.style [ style.color.crimson ]
             prop.text error
-        ])
-
-let chart (centeredSpinner: ReactElement) = chart' {| centeredSpinner = centeredSpinner |}
+        ]

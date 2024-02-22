@@ -4,7 +4,7 @@ module Samples.Line.ConnectGapsBetweenData
 open Feliz
 open Feliz.Plotly
 
-let chart () =
+let chart () : ReactElement =
     Plotly.plot [
         plot.traces [
             traces.scatter [

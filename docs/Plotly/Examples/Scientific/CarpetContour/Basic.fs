@@ -50,7 +50,7 @@ let chart () =
                 title.text "Cheater plot with 1d input"
             ]
             layout.margin [
-                margin.t 40 
+                margin.t 40
                 margin.r 30
                 margin.b 30
                 margin.l 30

@@ -19,7 +19,7 @@ let headers =
       [ "<b>Q3</b>" ]
       [ "<b>Q4</b>" ] ]
 
-let chart () =
+let chart () : ReactElement =
     Plotly.plot [
         plot.traces [
             traces.table [

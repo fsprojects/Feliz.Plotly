@@ -1,11 +1,10 @@
 ﻿[<RequireQualifiedAccess>]
 module Samples.Table.Styled
 
-open Fable.Core
 open Feliz
 open Feliz.Plotly
 
-let values =
+let values : PlotData list  =
     [ PlotData.String [ "Salaries"; "Office"; "Merchandise"; "Legal"; "<b>TOTAL</b>" ]
       PlotData.Int [ 1200000; 20000; 80000; 2000; 12120000 ]
       PlotData.Int [ 1300000; 20000; 70000; 2000; 130902000 ]
@@ -19,7 +18,7 @@ let headers =
       [ "<b>Q3</b>" ]
       [ "<b>Q4</b>" ] ]
 
-let chart () =
+let chart () : ReactElement =
     Plotly.plot [
         plot.traces [
             traces.table [

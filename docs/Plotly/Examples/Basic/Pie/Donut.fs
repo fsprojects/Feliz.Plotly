@@ -6,7 +6,7 @@ open Feliz.Plotly
 
 let labels = ["US"; "China"; "European Union"; "Russian Federation"; "Brazil"; "India"; "Rest of World" ]
 
-let chart () =
+let chart () : ReactElement =
     Plotly.plot [
         plot.traces [
             traces.pie [

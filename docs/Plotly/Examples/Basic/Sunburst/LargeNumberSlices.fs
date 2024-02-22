@@ -9,19 +9,19 @@ type CoffeeData =
     { Ids: string []
       Labels: string []
       Parents: string [] }
-    member this.AddDataSet (data: string []) =
+    member this.AddDataSet (data: string []) : CoffeeData =
         { this with
-            Ids = Array.append this.Ids (data.[0] |> Array.singleton)
-            Labels = Array.append this.Labels (data.[1] |> Array.singleton)
-            Parents = Array.append this.Parents (data.[2] |> Array.singleton) }
+            Ids     = [| yield! this.Ids;     data[0] |]
+            Labels  = [| yield! this.Labels;  data[1] |]
+            Parents = [| yield! this.Parents; data[2] |] }
 
 module CoffeeData =
-    let empty =
+    let empty : CoffeeData =
         { Ids = [||]
           Labels = [||]
           Parents = [||] }
 
-let render (data: CoffeeData)  =
+let render (data: CoffeeData) : ReactElement =
     Plotly.plot [
         plot.traces [
             traces.sunburst [
@@ -54,7 +54,8 @@ let render (data: CoffeeData)  =
         ]
     ]
 
-let chart' = React.functionComponent (fun (input: {| centeredSpinner: ReactElement |}) ->
+[<ReactComponent>]
+let chart (centeredSpinner: ReactElement) : ReactElement =
     let isLoading, setLoading = React.useState false
     let error, setError = React.useState<Option<string>> None
     let content, setContent = React.useState CoffeeData.empty
@@ -67,25 +68,23 @@ let chart' = React.functionComponent (fun (input: {| centeredSpinner: ReactEleme
             setLoading(false)
             if statusCode = 200 then
                 responseText.Trim().Split('\n')
-                |> Array.map (fun s -> s.Split(','))
+                |> Array.map _.Split(',')
                 |> Array.tail
                 |> Array.fold (fun (state: CoffeeData) (values: string []) -> state.AddDataSet values) content
                 |> setContent
                 setError(None)
             else
-                setError(Some (sprintf "Status %d: could not load %s" statusCode path))
+                setError(Some $"Status {statusCode}: could not load {path}")
         }
         |> Async.StartImmediate
 
     React.useEffect(loadDataset, [| path :> obj |])
 
     match isLoading, error with
-    | true, _ -> input.centeredSpinner
+    | true, _ -> centeredSpinner
     | false, None -> render content
     | _, Some error ->
         Html.h1 [
             prop.style [ style.color.crimson ]
             prop.text error
-        ])
-
-let chart (centeredSpinner: ReactElement) = chart' {| centeredSpinner = centeredSpinner |}
+        ]

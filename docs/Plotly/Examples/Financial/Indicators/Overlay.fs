@@ -10,7 +10,7 @@ let yData =
       420; 418; 423; 423; 426; 440; 437; 436; 447; 460; 478; 472; 450; 456; 436; 418
       429; 412; 429; 442; 464; 447; 434; 457; 474; 480; 499; 497; 480; 502; 512; 492 ]
 
-let chart () =
+let chart () : ReactElement =
     Plotly.plot [
         plot.traces [
             traces.indicator [
