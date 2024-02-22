@@ -13,9 +13,10 @@ type CsvData =
 
     member this.AddDataSet (data: string []) : CsvData =
         { this with
-            X = Array.append this.X (data[0] |> float |> Array.singleton)
-            Y = Array.append this.Y (data[1] |> float |> Array.singleton)
-            Z = Array.append this.Z (data[2] |> float |> Array.singleton) }
+            X = [| yield! this.X; (data[0] |> float) |]
+            Y = [| yield! this.Y; (data[1] |> float) |]
+            Z = [| yield! this.Z; (data[2] |> float) |]
+        }
 
 module CsvData =
     let empty : CsvData =
