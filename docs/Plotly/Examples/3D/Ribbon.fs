@@ -66,7 +66,7 @@ let render (data: RibbonData list) : ReactElement =
     ]
 
 [<ReactComponent>]
-let chart (centeredSpinner: ReactElement) : ReactElement =
+let Chart (centeredSpinner: ReactElement) : ReactElement =
     let isLoading, setLoading = React.useState false
     let error, setError = React.useState<Option<string>> None
     let content, setContent = React.useState None

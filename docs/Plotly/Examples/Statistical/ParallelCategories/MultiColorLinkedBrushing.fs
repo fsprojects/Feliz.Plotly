@@ -2,7 +2,6 @@
 module Samples.ParallelCategories.MultiColorLinkedBrushing
 
 open Elmish
-open Fable.Core
 open Fable.SimpleHttp
 open Feliz
 open Feliz.Plotly
@@ -10,8 +9,8 @@ open Feliz.UseElmish
 open Zanaptak.TypedCssClasses
 
 module Types =
-    type Bulma = CssClasses<"https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.5/css/bulma.min.css", Naming.PascalCase>
-    type FA = CssClasses<"https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css", Naming.PascalCase>
+    type Bulma = CssClasses<"https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css", Naming.PascalCase>
+    type FA = CssClasses<"https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css", Naming.PascalCase>
 
     type CarData =
         { Headers: string []
@@ -20,21 +19,22 @@ module Types =
           BodyStyle: string []
           DriveWheels: string []
           FuelType: string [] }
-        member this.AddDataSet (data: string []) =
+        member this.AddDataSet (data: string []) : CarData =
             { this with
-                HighwayMPG = Array.append this.HighwayMPG (data.[23] |> int |> Array.singleton)
+                HighwayMPG = [| yield! this.HighwayMPG; (data[23] |> int) |]
                 Horsepower =
-                    match data.[21] with
+                    match data[21] with
                     | hp when hp |> string = "NA" -> None
                     | hp -> hp |> int |> Some
                     |> Array.singleton
                     |> Array.append this.Horsepower
-                BodyStyle = Array.append this.BodyStyle (data.[6] |> Array.singleton)
-                DriveWheels = Array.append this.DriveWheels (data.[7] |> Array.singleton)
-                FuelType = Array.append this.FuelType (data.[3] |> Array.singleton) }
+                BodyStyle = [| yield! this.BodyStyle; data[6] |]
+                DriveWheels = [| yield! this.DriveWheels; data[7] |]
+                FuelType = [| yield! this.FuelType; data[3] |]
+            }
 
     module CarData =
-        let empty =
+        let empty : CarData =
             { Headers = [||]
               HighwayMPG = [||]
               Horsepower = [||]
@@ -65,7 +65,7 @@ module Types =
 module State =
     open Types
 
-    let loadDataset path state dispatch =
+    let loadDataset (path: string) (state: State) (dispatch: Msg -> unit) : unit =
         async {
             let! (statusCode, responseText) = Http.get path
             if statusCode = 200 then
@@ -80,11 +80,11 @@ module State =
                 |> SetCarData
                 |> dispatch
             else
-                dispatch <| SetError(Some (sprintf "Status %d: could not load %s" statusCode path))
+                dispatch <| SetError(Some $"Status {statusCode}: could not load {path}")
         }
         |> Async.StartImmediate
 
-    let update msg (state: State) =
+    let update (msg: Msg) (state: State) : State * Cmd<Msg> =
         match msg with
         | LoadData path -> state, Cmd.ofEffect (loadDataset path state)
         | SetCarData carData -> { state with CarData = carData; Colors = carData.Horsepower |> Array.map (fun _ -> 0);  DataLoaded = true; Error = None }, Cmd.none
@@ -108,7 +108,7 @@ module State =
             { state with Colors = colors }, Cmd.none
         | SetError err -> { state with Error = err }, Cmd.none
 
-    let init () =
+    let init () : State * Cmd<Msg> =
         { CarData = CarData.empty
           ColorAction = ColorAction.Erase
           Colors = [| |]
@@ -118,7 +118,7 @@ module State =
 module View =
     open Types
 
-    let plotData state =
+    let plotData (state: State) : IPlotProperty =
         let plotColorscale =
             [ color.gray
               color.gray
@@ -177,7 +177,8 @@ module View =
             ]
         ]
 
-    let render = React.functionComponent(fun () ->
+    [<ReactComponent>]
+    let render () : ReactElement =
         let state,dispatch = React.useElmish(State.init(), State.update, [||])
 
         match state.DataLoaded, state.Error with
@@ -253,6 +254,6 @@ module View =
             Html.h1 [
                 prop.style [ style.color.crimson ]
                 prop.text error
-            ])
+            ]
 
 let inline chart () = View.render()

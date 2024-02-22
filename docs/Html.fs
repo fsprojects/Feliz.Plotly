@@ -98,11 +98,11 @@ let samples : (string * ReactElement) list =
             [ "plotly-chart-sunburst-basic", Samples.Sunburst.Basic.chart()
               "plotly-chart-sunburst-branchvalues", Samples.Sunburst.Branchvalues.chart()
               "plotly-chart-sunburst-repeatedlabels", Samples.Sunburst.RepeatedLabels.chart()
-              "plotly-chart-sunburst-largenumberslices", Samples.Sunburst.LargeNumberSlices.chart(centeredSpinner) ]
+              "plotly-chart-sunburst-largenumberslices", Samples.Sunburst.LargeNumberSlices.Chart(centeredSpinner) ]
 
         let sankey =
             [ "plotly-chart-sankey-basic", Samples.Sankey.Basic.chart()
-              "plotly-chart-sankey-styled", Samples.Sankey.Styled.chart(centeredSpinner) ]
+              "plotly-chart-sankey-styled", Samples.Sankey.Styled.Chart(centeredSpinner) ]
 
         let pointCloud =
             [ "plotly-chart-pointcloud-basic", Samples.PointCloud.Basic.chart()
@@ -111,13 +111,13 @@ let samples : (string * ReactElement) list =
         let treemap =
             [ "plotly-chart-treemap-basic", Samples.Treemap.Basic.chart()
               "plotly-chart-treemap-differentattributes", Samples.Treemap.DifferentAttributes.chart()
-              "plotly-chart-treemap-sectorcolors", Samples.Treemap.SectorColors.chart()
-              "plotly-chart-treemap-nestedlayers", Samples.Treemap.NestedLayers.chart(centeredSpinner) ]
+              "plotly-chart-treemap-sectorcolors", Samples.Treemap.SectorColors.Chart()
+              "plotly-chart-treemap-nestedlayers", Samples.Treemap.NestedLayers.Chart(centeredSpinner) ]
 
         let table =
             [ "plotly-chart-table-basic", Samples.Table.Basic.chart()
               "plotly-chart-table-styled", Samples.Table.Styled.chart()
-              "plotly-chart-table-fromcsv", Samples.Table.FromCSV.chart(centeredSpinner)
+              "plotly-chart-table-fromcsv", Samples.Table.FromCSV.Chart(centeredSpinner)
               "plotly-chart-table-changingsizes", Samples.Table.ChangingSizes.chart()
               "plotly-chart-table-alternatingrowcolors", Samples.Table.AlternatingRowColors.chart() ]
 
@@ -189,23 +189,23 @@ let samples : (string * ReactElement) list =
               "plotly-chart-spccontrol-distribution", Samples.SPCControl.Distribution.chart() ]
 
         let violin =
-            [ "plotly-chart-violin-basic", Samples.Violin.Basic.chart(centeredSpinner)
-              "plotly-chart-violin-multipletraces", Samples.Violin.MultipleTraces.chart(centeredSpinner)
-              "plotly-chart-violin-grouped", Samples.Violin.Grouped.chart(centeredSpinner)
-              "plotly-chart-violin-horizontal", Samples.Violin.Horizontal.chart(centeredSpinner)
-              "plotly-chart-violin-split", Samples.Violin.Split.chart(centeredSpinner)
+            [ "plotly-chart-violin-basic", Samples.Violin.Basic.Chart(centeredSpinner)
+              "plotly-chart-violin-multipletraces", Samples.Violin.MultipleTraces.Chart(centeredSpinner)
+              "plotly-chart-violin-grouped", Samples.Violin.Grouped.Chart(centeredSpinner)
+              "plotly-chart-violin-horizontal", Samples.Violin.Horizontal.Chart(centeredSpinner)
+              "plotly-chart-violin-split", Samples.Violin.Split.Chart(centeredSpinner)
               "plotly-chart-violin-advanced", Samples.Violin.Advanced.chart() ]
 
         let parallelCategories =
             [ "plotly-chart-parallelcategories-basic", Samples.ParallelCategories.Basic.chart()
               "plotly-chart-parallelcategories-withcounts", Samples.ParallelCategories.WithCounts.chart()
-              "plotly-chart-parallelcategories-multicolor", Samples.ParallelCategories.MultiColor.chart(centeredSpinner)
-              "plotly-chart-parallelcategories-linkedbrushing", Samples.ParallelCategories.LinkedBrushing.chart(centeredSpinner)
+              "plotly-chart-parallelcategories-multicolor", Samples.ParallelCategories.MultiColor.Chart(centeredSpinner)
+              "plotly-chart-parallelcategories-linkedbrushing", Samples.ParallelCategories.LinkedBrushing.Chart(centeredSpinner)
               "plotly-chart-parallelcategories-multicolorlinkedbrushing", Samples.ParallelCategories.MultiColorLinkedBrushing.chart() ]
 
         let splom =
-            [ "plotly-chart-splom-iris", Samples.Splom.Iris.chart(centeredSpinner)
-              "plotly-chart-splom-diabetes", Samples.Splom.Diabetes.chart(centeredSpinner) ]
+            [ "plotly-chart-splom-iris", Samples.Splom.Iris.Chart(centeredSpinner)
+              "plotly-chart-splom-diabetes", Samples.Splom.Diabetes.Chart(centeredSpinner) ]
 
         let twoDimensionalHistogramContour =
             [ "plotly-chart-twodimensionalhistogramcontour-basic", Samples.TwoDimensionalHistogramContour.Basic.chart()
@@ -232,7 +232,7 @@ let samples : (string * ReactElement) list =
 
         let carpetContour =
             [ "plotly-chart-carpetcontour-basic", Samples.CarpetContour.Basic.chart()
-              "plotly-chart-carpetcontour-multipletraces", Samples.CarpetContour.MultipleTraces.chart(centeredSpinner) ]
+              "plotly-chart-carpetcontour-multipletraces", Samples.CarpetContour.MultipleTraces.Chart(centeredSpinner) ]
 
         let carpetScatter =
             [ "plotly-chart-carpetscatter-basic", Samples.CarpetScatter.Basic.chart()
@@ -266,30 +266,30 @@ let samples : (string * ReactElement) list =
             [ "plotly-chart-log-logarithmicaxes", Samples.Log.LogarithmicAxes.chart() ]
 
         let parallelCoordinates =
-            [ "plotly-chart-parallelcoordinates-addingdimensions", Samples.ParallelCoordinates.AddingDimensions.chart(centeredSpinner)
-              "plotly-chart-parallelcoordinates-advanced", Samples.ParallelCoordinates.Advanced.chart(centeredSpinner)
-              "plotly-chart-parallelcoordinates-annotated", Samples.ParallelCoordinates.Annotated.chart(centeredSpinner)
+            [ "plotly-chart-parallelcoordinates-addingdimensions", Samples.ParallelCoordinates.AddingDimensions.Chart(centeredSpinner)
+              "plotly-chart-parallelcoordinates-advanced", Samples.ParallelCoordinates.Advanced.Chart(centeredSpinner)
+              "plotly-chart-parallelcoordinates-annotated", Samples.ParallelCoordinates.Annotated.Chart(centeredSpinner)
               "plotly-chart-parallelcoordinates-basic", Samples.ParallelCoordinates.Basic.chart() ]
 
         let polar =
             [ "plotly-chart-polar-area", Samples.Polar.Area.chart()
               "plotly-chart-polar-categorical", Samples.Polar.Categorical.chart()
               "plotly-chart-polar-directions", Samples.Polar.Directions.chart()
-              "plotly-chart-polar-line", Samples.Polar.Line.chart(centeredSpinner)
+              "plotly-chart-polar-line", Samples.Polar.Line.Chart(centeredSpinner)
               "plotly-chart-polar-sector", Samples.Polar.Sector.chart()
               "plotly-chart-polar-subplots", Samples.Polar.Subplots.chart()
-              "plotly-chart-polar-webgl", Samples.Polar.WebGL.chart(centeredSpinner) ]
+              "plotly-chart-polar-webgl", Samples.Polar.WebGL.Chart(centeredSpinner) ]
 
         let radar =
             [ "plotly-chart-radar-basic", Samples.Radar.Basic.chart()
               "plotly-chart-radar-multipletraces", Samples.Radar.MultipleTraces.chart() ]
 
         let ternary =
-            [ "plotly-chart-ternary-soiltypes", Samples.Ternary.SoilTypes.chart(centeredSpinner)
+            [ "plotly-chart-ternary-soiltypes", Samples.Ternary.SoilTypes.Chart(centeredSpinner)
               "plotly-chart-ternary-withmarkers", Samples.Ternary.WithMarkers.chart() ]
 
         let ternaryContour =
-            [ "plotly-chart-ternarycontour-filled", Samples.TernaryContour.Filled.chart(centeredSpinner) ]
+            [ "plotly-chart-ternarycontour-filled", Samples.TernaryContour.Filled.Chart(centeredSpinner) ]
 
         let windRose =
             [ "plotly-chart-windrose-basic", Samples.WindRose.Basic.chart() ]
@@ -321,12 +321,12 @@ let samples : (string * ReactElement) list =
               "plotly-chart-indicators-overlay", Samples.Indicators.Overlay.chart() ]
 
         let ohlc =
-            [ "plotly-chart-ohlc-basic", Samples.OHLC.Basic.chart(centeredSpinner) ]
+            [ "plotly-chart-ohlc-basic", Samples.OHLC.Basic.Chart(centeredSpinner) ]
 
         let timeSeries =
-            [ "plotly-chart-timeseries-basic", Samples.TimeSeries.Basic.chart(centeredSpinner)
-              "plotly-chart-timeseries-setrange", Samples.TimeSeries.SetRange.chart(centeredSpinner)
-              "plotly-chart-timeseries-rangeslider", Samples.TimeSeries.RangeSlider.chart(centeredSpinner) ]
+            [ "plotly-chart-timeseries-basic", Samples.TimeSeries.Basic.Chart(centeredSpinner)
+              "plotly-chart-timeseries-setrange", Samples.TimeSeries.SetRange.Chart(centeredSpinner)
+              "plotly-chart-timeseries-rangeslider", Samples.TimeSeries.RangeSlider.Chart(centeredSpinner) ]
 
         let waterfall =
             [ "plotly-chart-waterfall-basic", Samples.Waterfall.Basic.chart()
@@ -337,24 +337,24 @@ let samples : (string * ReactElement) list =
         candlestick @ funnel @ indicators @ ohlc @ timeSeries @ waterfall
 
     let mapExamples =
-        [ "plotly-chart-maps-scatter", Samples.Maps.Scatter.chart(centeredSpinner)
+        [ "plotly-chart-maps-scatter", Samples.Maps.Scatter.Chart(centeredSpinner)
           "plotly-chart-maps-heatmap", Samples.Maps.Heatmap.chart()
-          "plotly-chart-maps-lines", Samples.Maps.Lines.chart(centeredSpinner)
-          "plotly-chart-maps-bubble", Samples.Maps.Bubble.chart(centeredSpinner)
+          "plotly-chart-maps-lines", Samples.Maps.Lines.Chart(centeredSpinner)
+          "plotly-chart-maps-bubble", Samples.Maps.Bubble.Chart(centeredSpinner)
           "plotly-chart-maps-filledarea", Samples.Maps.FilledArea.chart()
-          "plotly-chart-maps-choropleth", Samples.Maps.Choropleth.chart(centeredSpinner) ]
+          "plotly-chart-maps-choropleth", Samples.Maps.Choropleth.Chart(centeredSpinner) ]
 
     let threeDimensionalExamples =
-        [ "plotly-chart-3d-scatter", Samples.ThreeDimensional.Scatter.chart(centeredSpinner)
-          "plotly-chart-3d-ribbon", Samples.ThreeDimensional.Ribbon.chart(centeredSpinner)
-          "plotly-chart-3d-surface", Samples.ThreeDimensional.Surface.chart(centeredSpinner)
+        [ "plotly-chart-3d-scatter", Samples.ThreeDimensional.Scatter.Chart(centeredSpinner)
+          "plotly-chart-3d-ribbon", Samples.ThreeDimensional.Ribbon.Chart(centeredSpinner)
+          "plotly-chart-3d-surface", Samples.ThreeDimensional.Surface.Chart(centeredSpinner)
           "plotly-chart-3d-mesh", Samples.ThreeDimensional.Mesh.chart()
-          "plotly-chart-3d-line", Samples.ThreeDimensional.Line.chart(centeredSpinner)
+          "plotly-chart-3d-line", Samples.ThreeDimensional.Line.Chart(centeredSpinner)
           "plotly-chart-3d-trisurf", Samples.ThreeDimensional.TriSurf.chart()
-          "plotly-chart-3d-clustergraph", Samples.ThreeDimensional.ClusterGraph.chart(centeredSpinner)
+          "plotly-chart-3d-clustergraph", Samples.ThreeDimensional.ClusterGraph.Chart(centeredSpinner)
           "plotly-chart-3d-cone", Samples.ThreeDimensional.Cone.chart()
-          "plotly-chart-3d-streamtube", Samples.ThreeDimensional.Streamtube.chart(centeredSpinner)
-          "plotly-chart-3d-isosurface", Samples.ThreeDimensional.Isosurface.chart(centeredSpinner) ]
+          "plotly-chart-3d-streamtube", Samples.ThreeDimensional.Streamtube.Chart(centeredSpinner)
+          "plotly-chart-3d-isosurface", Samples.ThreeDimensional.Isosurface.Chart(centeredSpinner) ]
 
     let subplotExamples : (string * ReactElement) list =
         let multipleAxes =
@@ -363,23 +363,23 @@ let samples : (string * ReactElement) list =
 
         [ yield! multipleAxes
           "plotly-chart-subplots-inset", Samples.Subplots.Inset.chart()
-          "plotly-chart-subplots-mixed", Samples.Subplots.Mixed.chart(centeredSpinner) ]
+          "plotly-chart-subplots-mixed", Samples.Subplots.Mixed.Chart(centeredSpinner) ]
 
     let eventExamples =
-        [ "plotly-chart-events-click", Samples.Events.Click.chart()
-          "plotly-chart-events-hover", Samples.Events.Hover.chart()
-          "plotly-chart-events-zoom", Samples.Events.Zoom.chart()
-          "plotly-chart-events-disablezoom", Samples.Events.DisableZoom.chart(centeredSpinner)
+        [ "plotly-chart-events-click", Samples.Events.Click.Chart()
+          "plotly-chart-events-hover", Samples.Events.Hover.Chart()
+          "plotly-chart-events-zoom", Samples.Events.Zoom.Chart()
+          "plotly-chart-events-disablezoom", Samples.Events.DisableZoom.Chart(centeredSpinner)
           "plotly-chart-events-downloadimage", Samples.Events.DownloadImage.chart() ]
 
     let transformExamples =
         [ "plotly-chart-transforms-filter", Samples.Transforms.Filter.chart()
           "plotly-chart-transforms-groupby", Samples.Transforms.Groupby.chart()
           "plotly-chart-transforms-aggregations", Samples.Transforms.Aggregations.chart()
-          "plotly-chart-transforms-multiple", Samples.Transforms.Multiple.chart(centeredSpinner) ]
+          "plotly-chart-transforms-multiple", Samples.Transforms.Multiple.Chart(centeredSpinner) ]
 
     let transitionExamples =
-        [ "plotly-chart-transitions-lorenz", Samples.Transitions.Lorenz.chart() ]
+        [ "plotly-chart-transitions-lorenz", Samples.Transitions.Lorenz.Chart() ]
 
     let customExamples =
         [ "plotly-chart-custom-gantt", Samples.Custom.Gantt.chart()
@@ -387,7 +387,7 @@ let samples : (string * ReactElement) list =
 
     let localeExamples =
         [ "plotly-chart-locales-config", Samples.Locales.Config.chart()
-          "plotly-chart-locales-moduleregistration", Samples.Locales.ModuleRegistration.chart() ]
+          "plotly-chart-locales-moduleregistration", Samples.Locales.ModuleRegistration.Chart() ]
 
     basicSamples @
     statisticalExamples @

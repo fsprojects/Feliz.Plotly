@@ -12,7 +12,7 @@ let aScatterData =
     [ 4.; 4.5; 5.; 6. ]
     |> List.map (fun a -> a * 1e-6)
 
-let bCarpetData = 
+let bCarpetData =
     [ 1;  2;  3;  1;  2;  3;  1;  2;  3;  1;  2;  3 ]
     |> List.map (float >> fun b -> b * 1e6)
 
@@ -20,7 +20,7 @@ let bScatterData =
     [ 1.5; 2.5; 1.5; 2.5 ]
     |> List.map (fun b -> b * 1e6)
 
-let chart () =
+let chart () : ReactElement =
     Plotly.plot [
         plot.traces [
             traces.carpet [

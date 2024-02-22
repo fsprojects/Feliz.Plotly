@@ -14,7 +14,7 @@ let zData =
       [ None; None; None; Some 26; Some 25; Some 24; Some 23; Some 22 ] ]
     |> List.map (Seq.ofList >> PlotData.IntOption)
 
-let chart () =
+let chart () : ReactElement =
     Plotly.plot [
         plot.traces [
             traces.contour [

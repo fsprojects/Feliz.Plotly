@@ -10,7 +10,7 @@ let getYData i =
     List.init 100 (fun _ -> rng.NextDouble() * (float i))
 
 [<ReactMemoComponent>]
-let plot (callback: (int * float) option -> unit) : ReactElement =
+let Plot (callback: (int * float) option -> unit) : ReactElement =
     Plotly.plot [
         plot.traces [
             traces.scatter [
@@ -47,7 +47,7 @@ let plot (callback: (int * float) option -> unit) : ReactElement =
     ]
 
 [<ReactComponent>]
-let chart () : ReactElement =
+let Chart () : ReactElement =
     let hoverPoint,setHoverPoint = React.useState None
 
     let setPointCallback = React.useCallback(setHoverPoint)
@@ -59,5 +59,5 @@ let chart () : ReactElement =
                 prop.text $"Hovered points: ({x}, {y})"
             | None -> ()
         ]
-        plot setPointCallback
+        Plot setPointCallback
     ]

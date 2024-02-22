@@ -8,25 +8,26 @@ open Feliz.Plotly
 
 type ViolinData =
     { Headers: string []
-      TotalBill: float [] 
+      TotalBill: float []
       Tip: float []
       Sex: string []
       Smoker: string []
       Day: string []
       Time: string []
       Size: int [] }
-    member this.AddDataSet (data: string []) =
+    member this.AddDataSet (data: string []) : ViolinData =
         { this with
-            TotalBill = Array.append this.TotalBill (data.[0] |> float |> Array.singleton)
-            Tip = Array.append this.Tip (data.[1] |> float |> Array.singleton)
-            Sex = Array.append this.Sex (data.[2] |> Array.singleton)
-            Smoker = Array.append this.Smoker (data.[3] |> Array.singleton)
-            Day = Array.append this.Day (data.[4] |> Array.singleton)
-            Time = Array.append this.Time (data.[5] |> Array.singleton)
-            Size = Array.append this.Size (data.[6] |> int |> Array.singleton) }
+            TotalBill = [| yield! this.TotalBill; (data[0] |> float) |]
+            Tip = [| yield! this.Tip; (data[1] |> float) |]
+            Sex = [| yield! this.Sex; data[2] |]
+            Smoker = [| yield! this.Smoker; data[3] |]
+            Day = [| yield! this.Day; data[4] |]
+            Time = [| yield! this.Time; data[5] |]
+            Size = [| yield! this.Size; (data[6] |> int) |]
+        }
 
 module ViolinData =
-    let empty =
+    let empty : ViolinData =
         { Headers = [||]
           TotalBill = [||]
           Tip = [||]
@@ -36,7 +37,7 @@ module ViolinData =
           Time = [||]
           Size = [||] }
 
-let render (data: ViolinData)  =
+let render (data: ViolinData) : ReactElement =
     Plotly.plot [
         plot.traces [
             traces.violin [
@@ -64,21 +65,22 @@ let render (data: ViolinData)  =
         ]
     ]
 
-let chart' = React.functionComponent (fun (input: {| centeredSpinner: ReactElement |}) ->
+[<ReactComponent>]
+let Chart (centeredSpinner: ReactElement) : ReactElement =
     let isLoading, setLoading = React.useState false
     let error, setError = React.useState<Option<string>> None
     let content, setContent = React.useState ViolinData.empty
     let path = "https://raw.githubusercontent.com/plotly/datasets/master/violin_data.csv"
 
-    let loadDataset() = 
+    let loadDataset() =
         setLoading(true)
         async {
             let! (statusCode, responseText) = Http.get path
             setLoading(false)
             if statusCode = 200 then
                 let fullData =
-                    responseText.Trim().Split('\n') 
-                    |> Array.map (fun s -> s.Split(','))
+                    responseText.Trim().Split('\n')
+                    |> Array.map _.Split(',')
 
                 fullData
                 |> Array.tail
@@ -87,19 +89,17 @@ let chart' = React.functionComponent (fun (input: {| centeredSpinner: ReactEleme
                 |> setContent
                 setError(None)
             else
-                setError(Some (sprintf "Status %d: could not load %s" statusCode path))
+                setError(Some $"Status {statusCode}: could not load {path}")
         }
         |> Async.StartImmediate
 
     React.useEffect(loadDataset, [| path :> obj |])
 
     match isLoading, error with
-    | true, _ -> input.centeredSpinner
+    | true, _ -> centeredSpinner
     | false, None -> render content
     | _, Some error ->
         Html.h1 [
             prop.style [ style.color.crimson ]
             prop.text error
-        ])
-
-let chart (centeredSpinner: ReactElement) = chart' {| centeredSpinner = centeredSpinner |}
+        ]

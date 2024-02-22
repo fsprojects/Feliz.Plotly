@@ -4,20 +4,20 @@ module Samples.ErrorBar.Styled
 open Feliz
 open Feliz.Plotly
 
-let linspace min max n = 
+let linspace min max n =
     let bw = (max - min) / (float n - 1.)
     List.init n <| (float >> (fun  num -> num * bw) >> ((+) min))
 
 let theoX = linspace -4. 4. 100
 
-let sincx = 
+let sincx =
     theoX
     |> List.map (fun x -> System.Math.Sin(x) / x)
 
 let dataX = [ -3.8; -3.03; -1.91; -1.46; -0.89; -0.24; -0.0; 0.41; 0.89; 1.01; 1.91; 2.28; 2.79; 3.56 ]
 let dataY = [ -0.02; 0.04; -0.01; -0.27; 0.36; 0.75; 1.03; 0.65; 0.28; 0.02; -0.11; 0.16; 0.04; -0.15 ]
 
-let chart () =
+let chart () : ReactElement =
     Plotly.plot [
         plot.traces [
             traces.scatter [

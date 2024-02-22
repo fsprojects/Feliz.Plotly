@@ -14,7 +14,7 @@ let xData = [ 1 .. 100 ]
 let yData = xData |> List.map (fun _ -> rng.NextDouble())
 
 [<ReactComponent>]
-let chart () : ReactElement =
+let Chart () : ReactElement =
     Plotly.plot [
         plot.traces [
             traces.scatter [

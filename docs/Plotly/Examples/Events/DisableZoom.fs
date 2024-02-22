@@ -85,7 +85,7 @@ let render (data: AppleStocks) : ReactElement =
     ]
 
 [<ReactComponent>]
-let chart (centeredSpinner: ReactElement) : ReactElement =
+let Chart (centeredSpinner: ReactElement) : ReactElement =
     let isLoading, setLoading = React.useState false
     let error, setError = React.useState<Option<string>> None
     let content, setContent = React.useState AppleStocks.empty
@@ -108,7 +108,7 @@ let chart (centeredSpinner: ReactElement) : ReactElement =
                 |> setContent
                 setError(None)
             else
-                setError(Some (sprintf "Status %d: could not load %s" statusCode path))
+                setError(Some $"Status {statusCode}: could not load {path}")
         }
         |> Async.StartImmediate
 

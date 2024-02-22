@@ -18,7 +18,7 @@ let setTimeout (f: unit -> unit) (timeout: int) : int = jsNative
 let rng = System.Random()
 
 [<ReactComponent>]
-let plotLorenz (x: float list, y: float list) : ReactElement =
+let PlotLorenz (x: float list, y: float list) : ReactElement =
     Plotly.plot [
         plot.traces [
             traces.scatter [
@@ -85,7 +85,7 @@ let calcLorenz (data: seq<float * float * float>) =
     ]
 
 [<ReactComponent>]
-let chart () : ReactElement =
+let Chart () : ReactElement =
     let data,setData = React.useState(List.zip3 initX initY initZ)
 
     React.useEffect(fun () ->
@@ -98,7 +98,7 @@ let chart () : ReactElement =
         React.useMemo((fun () ->
             data
             |> List.unzip3
-            |> fun (x, _, y) -> plotLorenz (x, y)
+            |> fun (x, _, y) -> PlotLorenz (x, y)
         ), [| data |])
 
     plotLorenz

@@ -29,21 +29,21 @@ module USCities =
           Long = [||] }
 
 [<ReactMemoComponent>]
-let render (data: USCities) : ReactElement =
+let Render (input: {| data: USCities |}) : ReactElement =
 
     let hoverText, bubbleSize =
         React.useMemo ((fun () ->
             List.foldBack2 (fun name pop (hoverText, bubbleSize) ->
                 ($"{name} pop: {pop}"::hoverText, (pop / 50000)::bubbleSize)
-            ) (data.Names |> List.ofArray) (data.Population |> List.ofArray) ([], [])
-        ), [| data |])
+            ) (input.data.Names |> List.ofArray) (input.data.Population |> List.ofArray) ([], [])
+        ), [| input.data |])
 
     Plotly.plot [
         plot.traces [
             traces.scattergeo [
                 scattergeo.locationmode.USAStates
-                scattergeo.lat data.Lat
-                scattergeo.lon data.Long
+                scattergeo.lat input.data.Lat
+                scattergeo.lon input.data.Long
                 scattergeo.hoverinfo.text
                 scattergeo.text hoverText
                 scattergeo.marker [
@@ -78,7 +78,7 @@ let render (data: USCities) : ReactElement =
     ]
 
 [<ReactComponent>]
-let chart (centeredSpinner: ReactElement) : ReactElement =
+let Chart (centeredSpinner: ReactElement) : ReactElement =
     let isLoading, setLoading = React.useState false
     let error, setError = React.useState<Option<string>> None
     let content, setContent = React.useState USCities.empty
@@ -109,7 +109,7 @@ let chart (centeredSpinner: ReactElement) : ReactElement =
 
     match isLoading, error with
     | true, _ -> centeredSpinner
-    | false, None -> render content
+    | false, None -> Render {| data = content |}
     | _, Some error ->
         Html.h1 [
             prop.style [ style.color.crimson ]

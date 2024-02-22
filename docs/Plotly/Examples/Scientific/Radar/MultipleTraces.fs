@@ -6,7 +6,7 @@ open Feliz.Plotly
 
 let th = [ "A"; "B"; "C"; "D"; "E"; "A" ]
 
-let chart () =
+let chart () : ReactElement =
     Plotly.plot [
         plot.traces [
             traces.scatterpolar [

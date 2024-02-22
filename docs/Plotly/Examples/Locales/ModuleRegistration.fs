@@ -9,7 +9,7 @@ type Bulma = CssClasses<"https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.
 type FA = CssClasses<"https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css", Naming.PascalCase>
 
 [<ReactComponent>]
-let chart () : ReactElement =
+let Chart () : ReactElement =
     let toggledLang,setToggledLang = React.useState false
 
     Plotly.useLocale "example" [
