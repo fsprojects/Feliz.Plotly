@@ -59,7 +59,7 @@ let render (data: float [] []) : ReactElement =
     ]
 
 [<ReactComponent>]
-let chart (centeredSpinner: ReactElement) =
+let Chart (centeredSpinner: ReactElement) =
     let isLoading, setLoading = React.useState false
     let error, setError = React.useState<Option<string>> None
     let content, setContent = React.useState [||]

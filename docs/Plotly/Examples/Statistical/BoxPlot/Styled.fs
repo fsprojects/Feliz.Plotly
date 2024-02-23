@@ -34,7 +34,7 @@ let colorValues =
       color.rgba(255, 140, 184, 0.5); color.rgba(79, 90, 117, 0.5)
       color.rgba(222, 223, 0, 0.5) ]
 
-let boxPlots =
+let boxPlots : ITracesProperty list =
     yData
     |> List.map3 (fun name colorValue yData' ->
         traces.box [
@@ -53,7 +53,7 @@ let boxPlots =
         ]
     ) names colorValues
 
-let chart () =
+let chart () : ReactElement =
     Plotly.plot [
         plot.traces boxPlots
         plot.layout [

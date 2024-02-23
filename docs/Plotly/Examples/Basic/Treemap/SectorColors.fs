@@ -78,7 +78,7 @@ let colorscaleChart () : ReactElement =
     ]
 
 [<ReactComponent>]
-let chart () : ReactElement =
+let Chart () : ReactElement =
     let (state, dispatch) = React.useReducer(update, init)
 
     Html.div [

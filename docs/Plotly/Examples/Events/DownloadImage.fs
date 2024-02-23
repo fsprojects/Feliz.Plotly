@@ -8,7 +8,6 @@ open Zanaptak.TypedCssClasses
 type Bulma = CssClasses<"https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css", Naming.PascalCase>
 type FA = CssClasses<"https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css", Naming.PascalCase>
 
-[<ReactComponent>]
 let plot () =
     Plotly.plot [
         plot.traces [
@@ -21,7 +20,7 @@ let plot () =
     ]
 
 [<ReactComponent>]
-let buttons () : ReactElement =
+let Buttons () : ReactElement =
     let imgSrc, setImgSrc = React.useState(None)
 
     Html.div [
@@ -86,5 +85,5 @@ let buttons () : ReactElement =
 let chart () : ReactElement =
     Html.div [
         plot()
-        buttons()
+        Buttons()
     ]

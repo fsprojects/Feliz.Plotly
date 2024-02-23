@@ -8,7 +8,7 @@ open Feliz.Plotly
 
 type DiabetesData =
     { Headers: string []
-      Pregnancies: float [] 
+      Pregnancies: float []
       Glucose: float []
       BloodPressure: float []
       SkinThickness: float []
@@ -17,32 +17,33 @@ type DiabetesData =
       PedigreeFunction: float []
       Age: float []
       Outcome: float [] }
-    member this.AddDataSet (data: string []) =
+    member this.AddDataSet (data: string []) : DiabetesData =
         { this with
-            Pregnancies = Array.append this.Pregnancies (data.[0] |> float |> Array.singleton)
-            Glucose = Array.append this.Glucose (data.[1] |> float |> Array.singleton)
-            BloodPressure = Array.append this.BloodPressure (data.[2] |> float |> Array.singleton)
-            SkinThickness = Array.append this.SkinThickness (data.[3] |> float |> Array.singleton)
-            Insulin = Array.append this.Insulin (data.[4] |> float |> Array.singleton)
-            BMI = Array.append this.BMI (data.[5] |> float |> Array.singleton)
-            PedigreeFunction = Array.append this.PedigreeFunction (data.[6] |> float |> Array.singleton)
-            Age = Array.append this.Age (data.[7] |> float |> Array.singleton)
-            Outcome = Array.append this.Outcome (data.[8] |> float |> Array.singleton) }
+            Pregnancies =   [| yield! this.Pregnancies; (data[0] |> float) |]
+            Glucose =       [| yield! this.Glucose; (data[1] |> float) |]
+            BloodPressure = [| yield! this.BloodPressure; (data[2] |> float) |]
+            SkinThickness = [| yield! this.SkinThickness; (data[3] |> float) |]
+            Insulin = [| yield! this.Insulin; (data[4] |> float) |]
+            BMI =     [| yield! this.BMI; (data[5] |> float) |]
+            PedigreeFunction = [| yield! this.PedigreeFunction; (data[6] |> float) |]
+            Age =     [| yield! this.Age; (data[7] |> float) |]
+            Outcome = [| yield! this.Outcome; (data[8] |> float) |]
+        }
 
 module DiabetesData =
-    let empty =
+    let empty : DiabetesData =
         { Headers = [||]
           Pregnancies = [||]
           Glucose = [||]
           BloodPressure = [||]
           SkinThickness = [||]
           Insulin = [||]
-          BMI = [||] 
-          PedigreeFunction = [||] 
-          Age = [||] 
+          BMI = [||]
+          PedigreeFunction = [||]
+          Age = [||]
           Outcome = [||] }
 
-let render (data: DiabetesData)  =
+let render (data: DiabetesData) : ReactElement =
     let plotText =
         data.Outcome
         |> Array.map (fun o ->
@@ -136,7 +137,7 @@ let render (data: DiabetesData)  =
         ]
         plot.layout [
             layout.title [
-                title.text 
+                title.text
                     "Scatterplot Matrix (SPLOM) for Diabetes Dataset<br>Data \
                      source: <a href='https://www.kaggle.com/uciml/pima-indians\
                      -diabetes-database/data'>[1]</a>"
@@ -159,21 +160,22 @@ let render (data: DiabetesData)  =
         ]
     ]
 
-let chart' = React.functionComponent (fun (input: {| centeredSpinner: ReactElement |}) ->
+[<ReactComponent>]
+let Chart (centeredSpinner: ReactElement) : ReactElement =
     let isLoading, setLoading = React.useState false
     let error, setError = React.useState<Option<string>> None
     let content, setContent = React.useState DiabetesData.empty
     let path = "https://raw.githubusercontent.com/plotly/datasets/master/diabetes.csv"
 
-    let loadDataset() = 
+    let loadDataset() =
         setLoading(true)
         async {
             let! (statusCode, responseText) = Http.get path
             setLoading(false)
             if statusCode = 200 then
                 let fullData =
-                    responseText.Trim().Split('\n') 
-                    |> Array.map (fun s -> s.Split(','))
+                    responseText.Trim().Split('\n')
+                    |> Array.map _.Split(',')
 
                 fullData
                 |> Array.tail
@@ -182,19 +184,17 @@ let chart' = React.functionComponent (fun (input: {| centeredSpinner: ReactEleme
                 |> setContent
                 setError(None)
             else
-                setError(Some (sprintf "Status %d: could not load %s" statusCode path))
+                setError(Some $"Status {statusCode}: could not load {path}")
         }
         |> Async.StartImmediate
 
     React.useEffect(loadDataset, [| path :> obj |])
 
     match isLoading, error with
-    | true, _ -> input.centeredSpinner
+    | true, _ -> centeredSpinner
     | false, None -> render content
     | _, Some error ->
         Html.h1 [
             prop.style [ style.color.crimson ]
             prop.text error
-        ])
-
-let chart (centeredSpinner: ReactElement) = chart' {| centeredSpinner = centeredSpinner |}
+        ]

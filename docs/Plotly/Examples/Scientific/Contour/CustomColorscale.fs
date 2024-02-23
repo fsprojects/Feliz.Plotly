@@ -13,7 +13,7 @@ let zData =
 
 let plotColorscale =
     let scales = [ 0.; 0.25; 0.45; 0.65; 0.85; 1. ]
-    let colors = 
+    let colors =
         [ color.rgb(166,206,227)
           color.rgb(31,120,180)
           color.rgb(178,223,138)
@@ -23,7 +23,7 @@ let plotColorscale =
 
     color.colorscale.custom scales colors
 
-let chart () =
+let chart () : ReactElement =
     Plotly.plot [
         plot.traces [
             traces.contour [

@@ -7,7 +7,7 @@ open System
 
 let rng = Random()
 
-let normal () =
+let normal () : float =
     let x = rng.NextDouble() * 2. - 1.
     let y = rng.NextDouble() * 2. - 1.
     let rec boxMullerTransform rds =
@@ -30,7 +30,7 @@ let xData, yData =
             Math.Pow(step, 6.) + (0.3 * normal()))
     |> List.unzip
 
-let chart () =
+let chart () : ReactElement =
     Plotly.plot [
         plot.traces [
             traces.scatter [

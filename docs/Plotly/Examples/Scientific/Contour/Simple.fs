@@ -18,7 +18,7 @@ let zData =
             let r2 = x * x + y * y
             Math.Sin(x) * Math.Cos(y) * Math.Sin(r2) / Math.Log(r2 + 1.)))
 
-let chart () =
+let chart () : ReactElement =
     Plotly.plot [
         plot.traces [
             traces.contour [

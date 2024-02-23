@@ -11,7 +11,7 @@ let zData =
       [ 0.625; 1.25; 3.125; 6.25; 10.625 ]
       [ 0.; 0.625; 2.5; 5.625; 10. ] ]
 
-let chart () =
+let chart () : ReactElement =
     Plotly.plot [
         plot.traces [
             traces.contour [

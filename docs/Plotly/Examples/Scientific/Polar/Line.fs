@@ -1,30 +1,30 @@
 [<RequireQualifiedAccess>]
 module Samples.Polar.Line
 
-open Fable.Core
 open Fable.SimpleHttp
 open Feliz
 open Feliz.Plotly
 
 type PolarData =
     { Headers: string []
-      Y: int [] 
+      Y: int []
       X: float []
       X2: float []
       X3: float []
       X4: float []
       X5: float [] }
-    member this.AddDataSet (data: string []) =
+    member this.AddDataSet (data: string []) : PolarData =
         { this with
-            Y = Array.append this.Y (data.[0] |> int |> Array.singleton)
-            X = Array.append this.X (data.[1] |> float |> Array.singleton)
-            X2 = Array.append this.X2 (data.[2] |> float |> Array.singleton)
-            X3 = Array.append this.X3 (data.[3] |> float |> Array.singleton)
-            X4 = Array.append this.X4 (data.[4] |> float |> Array.singleton)
-            X5 = Array.append this.X5 (data.[5] |> float |> Array.singleton) }
+            Y  = [| yield! this.Y; (data[0] |> int) |]
+            X  = [| yield! this.X; (data[1] |> float) |]
+            X2 = [| yield! this.X2; (data[2] |> float) |]
+            X3 = [| yield! this.X3; (data[3] |> float) |]
+            X4 = [| yield! this.X4; (data[4] |> float) |]
+            X5 = [| yield! this.X5; (data[5] |> float) |]
+        }
 
 module PolarData =
-    let empty =
+    let empty : PolarData =
         { Headers = [||]
           Y = [||]
           X = [||]
@@ -33,7 +33,7 @@ module PolarData =
           X4 = [||]
           X5 = [||] }
 
-let render (data: PolarData) =
+let render (data: PolarData) : ReactElement =
     Plotly.plot [
         plot.traces [
             traces.scatterpolar [
@@ -105,21 +105,22 @@ let render (data: PolarData) =
         ]
     ]
 
-let chart' = React.functionComponent (fun (input: {| centeredSpinner: ReactElement |}) ->
+[<ReactComponent>]
+let Chart (centeredSpinner: ReactElement) : ReactElement =
     let isLoading, setLoading = React.useState false
     let error, setError = React.useState<Option<string>> None
     let content, setContent = React.useState PolarData.empty
     let path = "https://raw.githubusercontent.com/plotly/datasets/master/polar_dataset.csv"
 
-    let loadDataset() = 
+    let loadDataset() =
         setLoading(true)
         async {
             let! (statusCode, responseText) = Http.get path
             setLoading(false)
             if statusCode = 200 then
                 let fullData =
-                    responseText.Trim().Split('\n') 
-                    |> Array.map (fun s -> s.Split(','))
+                    responseText.Trim().Split('\n')
+                    |> Array.map _.Split(',')
 
                 fullData
                 |> Array.tail
@@ -135,12 +136,10 @@ let chart' = React.functionComponent (fun (input: {| centeredSpinner: ReactEleme
     React.useEffect(loadDataset, [| path :> obj |])
 
     match isLoading, error with
-    | true, _ -> input.centeredSpinner
+    | true, _ -> centeredSpinner
     | false, None -> render content
     | _, Some error ->
         Html.h1 [
             prop.style [ style.color.crimson ]
             prop.text error
-        ])
-
-let chart (centeredSpinner: ReactElement) = chart' {| centeredSpinner = centeredSpinner |}
+        ]

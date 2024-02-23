@@ -19,7 +19,7 @@ let yData2 = getYData 2
 let yData3 = getYData 3
 
 [<ReactComponent>]
-let chart () : ReactElement =
+let Chart () : ReactElement =
     let annotationsProperties, setAnns = React.useState []
 
     Plotly.plot [

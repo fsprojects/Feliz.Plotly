@@ -1,7 +1,6 @@
 [<RequireQualifiedAccess>]
 module Samples.Polar.WebGL
 
-open Fable.Core
 open Fable.SimpleHttp
 open Feliz
 open Feliz.Plotly
@@ -20,23 +19,24 @@ type PlotData =
       Trial5T : float []
       Trial6R : float []
       Trial6T : float [] }
-    member this.AddDataSet (data: string []) =
+    member this.AddDataSet (data: string []) : PlotData =
         { this with
-            TrialR = Array.append this.TrialR (data.[0] |> float |> Array.singleton)
-            TrialT = Array.append this.TrialT (data.[1] |> float |> Array.singleton)
-            Trial2R = Array.append this.Trial2R (data.[2] |> float |> Array.singleton)
-            Trial2T = Array.append this.Trial2T (data.[3] |> float |> Array.singleton)
-            Trial3R = Array.append this.Trial3R (data.[4] |> float |> Array.singleton)
-            Trial3T = Array.append this.Trial3T (data.[5] |> float |> Array.singleton)
-            Trial4R = Array.append this.Trial4R (data.[6] |> float |> Array.singleton)
-            Trial4T = Array.append this.Trial4T (data.[7] |> float |> Array.singleton)
-            Trial5R = Array.append this.Trial5R (data.[8] |> float |> Array.singleton)
-            Trial5T = Array.append this.Trial5T (data.[9] |> float |> Array.singleton)
-            Trial6R = Array.append this.Trial6R (data.[10] |> float |> Array.singleton)
-            Trial6T = Array.append this.Trial6T (data.[11] |> float |> Array.singleton) }
+            TrialR  = [| yield! this.TrialR; (data[0] |> float) |]
+            TrialT  = [| yield! this.TrialT; (data[1] |> float) |]
+            Trial2R = [| yield! this.Trial2R; (data[2] |> float) |]
+            Trial2T = [| yield! this.Trial2T; (data[3] |> float) |]
+            Trial3R = [| yield! this.Trial3R; (data[4] |> float) |]
+            Trial3T = [| yield! this.Trial3T; (data[5] |> float) |]
+            Trial4R = [| yield! this.Trial4R; (data[6] |> float) |]
+            Trial4T = [| yield! this.Trial4T; (data[7] |> float) |]
+            Trial5R = [| yield! this.Trial5R; (data[8] |> float) |]
+            Trial5T = [| yield! this.Trial5T; (data[9] |> float) |]
+            Trial6R = [| yield! this.Trial6R; (data[10] |> float) |]
+            Trial6T = [| yield! this.Trial6T; (data[11] |> float) |]
+        }
 
 module PlotData =
-    let empty =
+    let empty : PlotData =
         { Headers = [||]
           TrialR = [||]
           TrialT = [||]
@@ -51,7 +51,7 @@ module PlotData =
           Trial6R = [||]
           Trial6T = [||] }
 
-let render (data: PlotData) =
+let render (data: PlotData) : ReactElement =
     Plotly.plot [
         plot.traces [
             traces.scatterpolargl [
@@ -167,21 +167,22 @@ let render (data: PlotData) =
         ]
     ]
 
-let chart' = React.functionComponent (fun (input: {| centeredSpinner: ReactElement |}) ->
+[<ReactComponent>]
+let Chart (centeredSpinner: ReactElement) : ReactElement =
     let isLoading, setLoading = React.useState false
     let error, setError = React.useState<Option<string>> None
     let content, setContent = React.useState PlotData.empty
     let path = "https://raw.githubusercontent.com/plotly/datasets/master/hobbs-pearson-trials.csv"
 
-    let loadDataset() = 
+    let loadDataset() =
         setLoading(true)
         async {
             let! (statusCode, responseText) = Http.get path
             setLoading(false)
             if statusCode = 200 then
                 let fullData =
-                    responseText.Trim().Split('\n') 
-                    |> Array.map ((fun s -> s.Replace(".00E+05","")) >> (fun s -> s.Split(',')))
+                    responseText.Trim().Split('\n')
+                    |> Array.map (_.Replace(".00E+05","") >> _.Split(','))
 
                 fullData
                 |> Array.tail
@@ -190,19 +191,17 @@ let chart' = React.functionComponent (fun (input: {| centeredSpinner: ReactEleme
                 |> setContent
                 setError(None)
             else
-                setError(Some (sprintf "Status %d: could not load %s" statusCode path))
+                setError(Some $"Status {statusCode}: could not load {path}")
         }
         |> Async.StartImmediate
 
     React.useEffect(loadDataset, [| path :> obj |])
 
     match isLoading, error with
-    | true, _ -> input.centeredSpinner
+    | true, _ -> centeredSpinner
     | false, None -> render content
     | _, Some error ->
         Html.h1 [
             prop.style [ style.color.crimson ]
             prop.text error
-        ])
-
-let chart (centeredSpinner: ReactElement) = chart' {| centeredSpinner = centeredSpinner |}
+        ]
