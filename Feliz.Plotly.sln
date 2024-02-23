@@ -483,6 +483,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Locales", "Locales", "{A36D
 		public\Plotly\Examples\Locales\ModuleRegistration.md = public\Plotly\Examples\Locales\ModuleRegistration.md
 	EndProjectSection
 EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "build", "build\build.fsproj", "{ACA1C86A-D392-4126-AA03-AB77EDD5F041}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -501,6 +503,10 @@ Global
 		{0A840E11-9EE5-4088-ADA9-D01DABCBF57B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0A840E11-9EE5-4088-ADA9-D01DABCBF57B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0A840E11-9EE5-4088-ADA9-D01DABCBF57B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ACA1C86A-D392-4126-AA03-AB77EDD5F041}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ACA1C86A-D392-4126-AA03-AB77EDD5F041}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ACA1C86A-D392-4126-AA03-AB77EDD5F041}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ACA1C86A-D392-4126-AA03-AB77EDD5F041}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

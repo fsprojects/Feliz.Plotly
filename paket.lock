@@ -1,4 +1,71 @@
-RESTRICTION: || (== net8.0) (== netstandard2.0)
+RESTRICTION: || (== net7.0) (== net8.0) (== netstandard2.0)
+NUGET
+  remote: https://www.nuget.org/api/v2
+    FSharp.Core (8.0.200) - content: none
+
+GROUP build
+STORAGE: NONE
+RESTRICTION: == net7.0
+NUGET
+  remote: https://api.nuget.org/v3/index.json
+    Fake.Core.CommandLineParsing (6.0)
+      FParsec (>= 1.1.1)
+      FSharp.Core (>= 6.0.3)
+    Fake.Core.Context (6.0)
+      FSharp.Core (>= 6.0.3)
+    Fake.Core.Environment (6.0)
+      FSharp.Core (>= 6.0.3)
+    Fake.Core.FakeVar (6.0)
+      Fake.Core.Context (>= 6.0)
+      FSharp.Core (>= 6.0.3)
+    Fake.Core.Process (6.0)
+      Fake.Core.Environment (>= 6.0)
+      Fake.Core.FakeVar (>= 6.0)
+      Fake.Core.String (>= 6.0)
+      Fake.Core.Trace (>= 6.0)
+      Fake.IO.FileSystem (>= 6.0)
+      FSharp.Core (>= 6.0.3)
+      System.Collections.Immutable (>= 6.0)
+    Fake.Core.ReleaseNotes (6.0)
+      Fake.Core.SemVer (>= 6.0)
+      Fake.Core.String (>= 6.0)
+      FSharp.Core (>= 6.0.3)
+    Fake.Core.SemVer (6.0)
+      FSharp.Core (>= 6.0.3)
+    Fake.Core.String (6.0)
+      FSharp.Core (>= 6.0.3)
+    Fake.Core.Target (6.0)
+      Fake.Core.CommandLineParsing (>= 6.0)
+      Fake.Core.Context (>= 6.0)
+      Fake.Core.Environment (>= 6.0)
+      Fake.Core.FakeVar (>= 6.0)
+      Fake.Core.Process (>= 6.0)
+      Fake.Core.String (>= 6.0)
+      Fake.Core.Trace (>= 6.0)
+      FSharp.Control.Reactive (>= 5.0.2)
+      FSharp.Core (>= 6.0.3)
+    Fake.Core.Trace (6.0)
+      Fake.Core.Environment (>= 6.0)
+      Fake.Core.FakeVar (>= 6.0)
+      FSharp.Core (>= 6.0.3)
+    Fake.DotNet.AssemblyInfoFile (6.0)
+      Fake.Core.Environment (>= 6.0)
+      Fake.Core.String (>= 6.0)
+      Fake.Core.Trace (>= 6.0)
+      Fake.IO.FileSystem (>= 6.0)
+      FSharp.Core (>= 6.0.3)
+    Fake.IO.FileSystem (6.0)
+      Fake.Core.String (>= 6.0)
+      Fake.Core.Trace (>= 6.0)
+      FSharp.Core (>= 6.0.3)
+    FParsec (1.1.1)
+      FSharp.Core (>= 4.3.4)
+    FSharp.Control.Reactive (5.0.5)
+      FSharp.Core (>= 4.7.2)
+      System.Reactive (>= 5.0 < 6.0)
+    FSharp.Core (8.0.200)
+    System.Collections.Immutable (8.0)
+    System.Reactive (5.0)
 
 GROUP Docs
 NUGET
@@ -76,9 +143,10 @@ NUGET
     Feliz.UseElmish (2.5)
       Fable.Elmish (>= 4.0) - restriction: >= netstandard2.0
       FSharp.Core (>= 4.7.2) - restriction: >= netstandard2.0
-    FSharp.Core (8.0.200)
     Zanaptak.TypedCssClasses (1.0)
       FSharp.Core (>= 4.3.4) - restriction: >= netstandard2.0
+  remote: https://api.nuget.org/v3/index.json
+    FSharp.Core (8.0.200)
 
 GROUP FakeBuild
 NUGET
@@ -348,8 +416,8 @@ NUGET
       Fake.Core.String (>= 6.0) - restriction: >= netstandard2.0
       Fake.Core.Trace (>= 6.0) - restriction: >= netstandard2.0
       FSharp.Core (>= 6.0.3) - restriction: >= netstandard2.0
-  remote: https://www.nuget.org/api/v2
     FSharp.Core (8.0.200)
+  remote: https://www.nuget.org/api/v2
     FSharp.Data (6.3)
       FSharp.Core (>= 5.0.1) - restriction: >= netstandard2.0
       FSharp.Data.Csv.Core (>= 6.3) - restriction: >= netstandard2.0

@@ -1,3 +1,6 @@
+source https://www.nuget.org/api/v2
+
+nuget FSharp.Core content: none
 version 7.1.5
 
 framework: auto-detect
@@ -57,3 +60,12 @@ group FakeBuild
     nuget FSharp.Json ~> 0.4
     #nuget FSharpLint.Core ~> 0.21 copy_local: false
     nuget NuGet.Packaging ~> 6.8
+
+group build
+    source https://api.nuget.org/v3/index.json
+    storage: none
+    framework: net7.0
+
+    nuget Fake.Core.ReleaseNotes
+    nuget Fake.Core.Target
+    nuget Fake.DotNet.AssemblyInfoFile
