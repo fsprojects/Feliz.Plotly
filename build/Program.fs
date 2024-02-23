@@ -4,10 +4,10 @@ open System.IO
 open Fake.Core
 open Fake.Core.TargetOperators
 open Fake.DotNet
+open Fake.JavaScript
 open Fake.IO
 open Fake.IO.FileSystemOperators
 open Fake.IO.Globbing.Operators
-
 
 // The name of the project
 // (used by attributes in AssemblyInfo, name of a NuGet package and directory in 'src')
@@ -166,20 +166,192 @@ Target.create "CopyBinaries" <| fun _ ->
 // --------------------------------------------------------------------------------------
 // Clean tasks
 
-// Target.create "Clean" <| fun _ ->
-//     let clean() =
-//         !! (__SOURCE_DIRECTORY__  @@ "tests/**/bin")
-//         ++ (__SOURCE_DIRECTORY__  @@ "tests/**/obj")
-//         ++ (__SOURCE_DIRECTORY__  @@ "tools/bin")
-//         ++ (__SOURCE_DIRECTORY__  @@ "tools/obj")
-//         ++ (__SOURCE_DIRECTORY__  @@ "src/**/bin")
-//         ++ (__SOURCE_DIRECTORY__  @@ "src/**/obj")
-//         |> Seq.toList
-//         |> List.append [bin; temp; objFolder]
-//         |> Shell.cleanDirs
+Target.create "Clean" <| fun _ ->
+    let clean() =
+        !! (__SOURCE_DIRECTORY__  @@ "tests/**/bin")
+        ++ (__SOURCE_DIRECTORY__  @@ "tests/**/obj")
+        ++ (__SOURCE_DIRECTORY__  @@ "tools/bin")
+        ++ (__SOURCE_DIRECTORY__  @@ "tools/obj")
+        ++ (__SOURCE_DIRECTORY__  @@ "src/**/bin")
+        ++ (__SOURCE_DIRECTORY__  @@ "src/**/obj")
+        |> Seq.toList
+        |> List.append [bin; temp; objFolder]
+        |> Shell.cleanDirs
 
-//     TaskRunner.runWithRetries clean 10
+    TaskRunner.runWithRetries clean 10
 
+Target.create "CleanDocs" <| fun _ ->
+    let clean() =
+        !! (publicDir @@ "*.md")
+        ++ (publicDir @@ "*bundle.*")
+        ++ (publicDir @@ "**/README.md")
+        ++ (publicDir @@ "**/RELEASE_NOTES.md")
+        ++ (publicDir @@ "index.html")
+        |> List.ofSeq
+        |> List.iter Shell.rm
+
+    TaskRunner.runWithRetries clean 10
+
+Target.create "CopyDocFiles" <| fun _ ->
+    [ publicDir @@ "Plotly/README.md", __SOURCE_DIRECTORY__ @@ "README.md"
+      publicDir @@ "Plotly/RELEASE_NOTES.md", __SOURCE_DIRECTORY__ @@ "RELEASE_NOTES.md"
+      publicDir @@ "index.html", __SOURCE_DIRECTORY__ @@ "docs/index.html" ]
+    |> List.iter (fun (target, source) -> Shell.copyFile target source)
+
+Target.create "PrepDocs" ignore
+
+Target.create "PostBuildClean" <| fun _ ->
+    let clean() =
+        !! srcGlob
+        -- (__SOURCE_DIRECTORY__ @@ "src/**/*.shproj")
+        |> Seq.map (
+            (fun f -> (Path.getDirectory f) @@ "bin" @@ configuration())
+            >> (fun f -> Directory.EnumerateDirectories(f) |> Seq.toList )
+            >> (fun fL -> fL |> List.map (fun f -> Directory.EnumerateDirectories(f) |> Seq.toList)))
+        |> (Seq.concat >> Seq.concat)
+        |> Seq.iter Directory.delete
+
+    TaskRunner.runWithRetries clean 10
+
+Target.create "PostPublishClean" <| fun _ ->
+    let clean() =
+        !! (__SOURCE_DIRECTORY__ @@ "src/**/bin" @@ configuration() @@ "/**/publish")
+        |> Seq.iter Directory.delete
+
+    TaskRunner.runWithRetries clean 10
+
+// --------------------------------------------------------------------------------------
+// Restore tasks
+
+let restoreSolution () =
+    solutionFile
+    |> DotNet.restore id
+
+Target.create "Restore" <| fun _ ->
+    TaskRunner.runWithRetries restoreSolution 5
+
+Target.create "YarnInstall" <| fun _ ->
+    let setParams (defaults: Yarn.YarnParams) : Yarn.YarnParams =
+        { defaults with
+            Yarn.YarnParams.YarnFilePath = (__SOURCE_DIRECTORY__ @@ "packages/tooling/Yarnpkg.Yarn/content/bin/yarn.cmd")
+        }
+
+    Yarn.install setParams
+
+// --------------------------------------------------------------------------------------
+// Build tasks
+
+let buildProject (project: string) : unit =
+    let setParams (defaults:MSBuildParams) : MSBuildParams =
+        { defaults with
+            Verbosity = Some(Quiet)
+            Targets = ["Build"]
+            Properties =
+                [
+                    "Optimize", "True"
+                    "DebugSymbols", "True"
+                    "Configuration", configuration()
+                    "Version", release.AssemblyVersion
+                    "GenerateDocumentationFile", "true"
+                    "DependsOnNETStandard", "true"
+                ] }
+
+    TaskRunner.runWithRetries (fun _ -> MSBuild.build setParams project) 10
+
+Target.create "RunGenerators" <| fun _ ->
+    let runGenerator (path: string) =
+        CreateProcess.fromCommand(setCmd path [])
+        |> CreateProcess.withTimeout TimeSpan.MaxValue
+        |> CreateProcess.ensureExitCodeWithMessage $"Generator {path} failed."
+        |> Proc.run
+        |> ignore
+
+    Trace.trace "Running generators..."
+
+    !! genGlob
+    |> List.ofSeq
+    |> List.iter (fun project ->
+        buildProject project
+
+        !! ((FileInfo.ofPath project).Directory.FullName @@ "bin" @@ configuration() @@ "**/*.Generator.*.exe")
+        |> List.ofSeq
+        |> List.tryHead
+        |> Option.iter (fun path -> TaskRunner.runWithRetries (fun _ -> runGenerator path) 5))
+
+Target.create "Build" <| fun _ ->
+    restoreSolution ()
+
+    !! libGlob
+    -- genGlob
+    |> List.ofSeq
+    |> List.iter buildProject
+
+// --------------------------------------------------------------------------------------
+// Publish net core applications
+
+Target.create "PublishDotNet" <| fun _ ->
+    let runPublish (project: string) (framework: string) =
+        let setParams (defaults: MSBuildParams) : MSBuildParams =
+            { defaults with
+                Verbosity = Some(Quiet)
+                Targets = ["Publish"]
+                Properties =
+                    [
+                        "Optimize", "True"
+                        "DebugSymbols", "True"
+                        "Configuration", configuration()
+                        "Version", release.AssemblyVersion
+                        "GenerateDocumentationFile", "true"
+                        "TargetFramework", framework
+                    ]
+            }
+
+        MSBuild.build setParams project
+
+    !! libGlob
+    -- genGlob
+    |> Seq.map
+        ((fun f -> (((Path.getDirectory f) @@ "bin" @@ configuration()), f) )
+        >>
+        (fun f ->
+            Directory.EnumerateDirectories(fst f)
+            |> Seq.filter (fun frFolder -> frFolder.Contains("netcoreapp"))
+            |> Seq.map (fun frFolder -> DirectoryInfo(frFolder).Name), snd f))
+    |> Seq.iter (fun (l,p) -> l |> Seq.iter (runPublish p))
+
+// --------------------------------------------------------------------------------------
+// Run the unit test binaries
+
+Target.create "RunTests" <| fun _ ->
+    let globbingPattern = !! ("tests/**/bin" @@ configuration() @@ "**" @@ "*Tests.exe")
+
+    for path in globbingPattern do
+        CreateProcess.fromCommand(setCmd path [])
+        |> CreateProcess.withTimeout TimeSpan.MaxValue
+        |> CreateProcess.ensureExitCodeWithMessage "Tests failed."
+        |> Proc.run
+        |> ignore
+
+Target.create "PackageJson" <| fun _ ->
+    let setValues (current: Json.JsonPackage) =
+        { current with
+            Name = Json.Str.toKebabCase project |> Some
+            Version = release.NugetVersion |> Some
+            Description = summary |> Some
+            Homepage = repo |> Some
+            Repository =
+                { Json.RepositoryValue.Type = "git" |> Some
+                  Json.RepositoryValue.Url = repo |> Some
+                  Json.RepositoryValue.Directory = None }
+                |> Some
+            Bugs =
+                { Json.BugsValue.Url =
+                    @"https://github.com/fsprojects/Feliz.Plotly/issues/new/choose" |> Some } |> Some
+            License = "MIT" |> Some
+            Author = author |> Some
+            Private = true |> Some }
+
+    Json.setJsonPkg setValues
 
 [<EntryPoint>]
 let main argv =
