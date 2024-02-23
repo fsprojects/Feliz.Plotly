@@ -6,8 +6,8 @@ open System.Runtime.CompilerServices
 [<assembly: AssemblyTitleAttribute("Feliz.Generator.Plotly")>]
 [<assembly: AssemblyProductAttribute("Feliz.Plotly")>]
 [<assembly: AssemblyDescriptionAttribute("Fable bindings written in the Feliz-style for plotly.js")>]
-[<assembly: AssemblyVersionAttribute("2.1.0")>]
-[<assembly: AssemblyFileVersionAttribute("2.1.0")>]
+[<assembly: AssemblyVersionAttribute("2.28.0")>]
+[<assembly: AssemblyFileVersionAttribute("2.28.0")>]
 [<assembly: AssemblyConfigurationAttribute("Debug")>]
 [<assembly: InternalsVisibleToAttribute("Feliz.Generator.Plotly.Tests")>]
 do ()
@@ -16,7 +16,7 @@ module internal AssemblyVersionInformation =
     let [<Literal>] AssemblyTitle = "Feliz.Generator.Plotly"
     let [<Literal>] AssemblyProduct = "Feliz.Plotly"
     let [<Literal>] AssemblyDescription = "Fable bindings written in the Feliz-style for plotly.js"
-    let [<Literal>] AssemblyVersion = "2.1.0"
-    let [<Literal>] AssemblyFileVersion = "2.1.0"
+    let [<Literal>] AssemblyVersion = "2.28.0"
+    let [<Literal>] AssemblyFileVersion = "2.28.0"
     let [<Literal>] AssemblyConfiguration = "Debug"
     let [<Literal>] InternalsVisibleTo = "Feliz.Generator.Plotly.Tests"

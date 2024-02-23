@@ -25,7 +25,7 @@ module Common =
         if pieces.Length > 1 then
             pieces
             |> Array.iteri (fun i piece ->
-                if i > 0 then pieces.[i] <- piece.Substring(0, 1).ToUpper() + piece.Substring(1))
+                if i > 0 then pieces[i] <- piece.Substring(0, 1).ToUpper() + piece.Substring(1))
             pieces |> String.concat ""
         else
             s
@@ -38,7 +38,7 @@ module Common =
         if pieces.Length > 1 then
             pieces
             |> Array.iteri (fun i piece ->
-                if i > 0 then pieces.[i] <- piece.Substring(0, 1).ToUpper() + piece.Substring(1))
+                if i > 0 then pieces[i] <- piece.Substring(0, 1).ToUpper() + piece.Substring(1))
             pieces |> String.concat ""
         else
             s

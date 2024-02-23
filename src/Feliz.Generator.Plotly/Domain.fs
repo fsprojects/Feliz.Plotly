@@ -35,12 +35,12 @@ module rec Domain =
               IsCalcType =
                   let editType =
                       jVal.TryGetProperty("editType")
-                      |> Option.map (JsonExtensions.AsString >> (fun s -> s.Contains("calc")))
+                      |> Option.map (JsonExtensions.AsString >> _.Contains("calc"))
                       |> Option.defaultValue false
 
                   let role =
                       jVal.TryGetProperty("role")
-                      |> Option.map (JsonExtensions.AsString >> (fun s -> s.Contains("data")))
+                      |> Option.map (JsonExtensions.AsString >> _.Contains("data"))
                       |> Option.defaultValue false
 
                   editType && role
@@ -70,7 +70,7 @@ module rec Domain =
               NumArrayOk = false
               TwoDimArrayOk = false }
 
-        let applyOverride (overrides: PrimSpecOverrides) (baseSpecs: PrimSpecs) =
+        let applyOverride (overrides: PrimSpecOverrides) (baseSpecs: PrimSpecs) : PrimSpecs =
             { baseSpecs with
                   ArrayOk =
                       match overrides.ArrayOk with
@@ -355,8 +355,8 @@ module rec Domain =
         let allArrResizeOptStrs =
             [ boolSeqStrOpt; dateSeqStrOpt; dateOffsetSeqStrOpt; intSeqStrOpt; floatSeqStrOpt; stringSeqStrOpt ]
 
-        let getPrimativeOverloadSeq =
-            function
+        let getPrimativeOverloadSeq (valType: ValType) : (string * string) list =
+            match valType with
             | ValType.Any -> allArrResizeStrs
             | ValType.Bool _ -> allBoolArrResizeStrs
             | ValType.ColorScale -> [ stringStr; yield! allStr2DStrs ]
