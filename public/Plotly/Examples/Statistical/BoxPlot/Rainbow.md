@@ -15,23 +15,23 @@ let rng = Random()
 let getRandomArbitrary min max =
     rng.NextDouble() * (max - min) + min
 
-let linspace min max n = 
+let linspace min max n =
     let bw = (max - min) / (float n - 1.)
     List.init n <| (float >> (fun num -> num * bw) >> ((+) min))
 
 let boxNumber = 30
 let boxColors = linspace 0. 360. boxNumber |> List.map (fun col -> color.hsl(col, 50., 50.))
 
-let yData =
-    [ 0. .. (boxNumber-1 |> float) ]
-    |> List.map (fun i ->
-        [ 0. .. 9. ]
-        |> List.map (fun _ ->
+let (yData: (float list) list) =
+    [ for i in [ 0. .. (boxNumber-1 |> float) ] do
+        [ for _ in [ 0. .. 9. ] do
             let boxDiv = i / (boxNumber |> float)
             let randomNum = getRandomArbitrary 0. 1.
-            3.5 * Math.Sin(Math.PI * boxDiv) + boxDiv + (1.5 + 0.5 * Math.Cos(Math.PI * boxDiv)) * randomNum))
+            3.5 * Math.Sin(Math.PI * boxDiv) + boxDiv + (1.5 + 0.5 * Math.Cos(Math.PI * boxDiv)) * randomNum
+        ]
+    ]
 
-let boxPlots =
+let boxPlots : ITracesProperty list =
     yData
     |> List.map2 (fun (colorValue: string) yData' ->
         traces.box [
@@ -42,7 +42,7 @@ let boxPlots =
             ]
         ]) boxColors
 
-let chart () =
+let chart () : ReactElement =
     Plotly.plot [
         plot.traces boxPlots
         plot.layout [
@@ -62,4 +62,5 @@ let chart () =
             layout.width 1000
         ]
     ]
+
 ```

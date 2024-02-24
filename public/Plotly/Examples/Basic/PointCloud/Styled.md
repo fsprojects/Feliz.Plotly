@@ -1,4 +1,4 @@
-﻿# Feliz.Plotly - Point Cloud
+# Feliz.Plotly - Point Cloud
 
 Taken from [Plotly - Point Cloud](https://plot.ly/javascript/pointcloud/)
 
@@ -9,7 +9,7 @@ module Samples.PointCloud.Styled
 open Feliz
 open Feliz.Plotly
 
-let chart () =
+let chart () : ReactElement =
     Plotly.plot [
         plot.traces [
             traces.pointcloud [
@@ -66,4 +66,5 @@ let chart () =
             layout.showlegend false
         ]
     ]
+
 ```

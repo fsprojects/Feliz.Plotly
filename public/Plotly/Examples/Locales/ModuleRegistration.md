@@ -1,4 +1,4 @@
-﻿# Feliz.Plotly - Locale Module Registration
+# Feliz.Plotly - Locale Module Registration
 
 Localization can also be changed at a site-wide level through
 the use of Plotly module registration which is exposed as hooks.
@@ -13,10 +13,11 @@ open Feliz
 open Feliz.Plotly
 open Zanaptak.TypedCssClasses
 
-type Bulma = CssClasses<"https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.5/css/bulma.min.css", Naming.PascalCase>
-type FA = CssClasses<"https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css", Naming.PascalCase>
+type Bulma = CssClasses<"https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css", Naming.PascalCase>
+type FA = CssClasses<"https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css", Naming.PascalCase>
 
-let chart = React.functionComponent(fun () ->
+[<ReactComponent>]
+let Chart () : ReactElement =
     let toggledLang,setToggledLang = React.useState false
 
     Plotly.useLocale "example" [
@@ -32,7 +33,7 @@ let chart = React.functionComponent(fun () ->
             ]
         ]
     ]
-    
+
     Plotly.useLocales [
         Locales.de
         Locales.fr
@@ -70,5 +71,6 @@ let chart = React.functionComponent(fun () ->
                 ]
             ]
         ]
-    ])
+    ]
+
 ```

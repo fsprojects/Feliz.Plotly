@@ -6,7 +6,6 @@ Taken from [Plotly - Parallel Categories](https://plot.ly/javascript/parallel-ca
 [<RequireQualifiedAccess>]
 module Samples.ParallelCategories.LinkedBrushing
 
-open Fable.Core
 open Fable.SimpleHttp
 open Feliz
 open Feliz.Plotly
@@ -18,21 +17,22 @@ type CarData =
       BodyStyle: string []
       DriveWheels: string []
       FuelType: string [] }
-    member this.AddDataSet (data: string []) =
+    member this.AddDataSet (data: string []) : CarData =
         { this with
-            HighwayMPG = Array.append this.HighwayMPG (data.[23] |> int |> Array.singleton)
-            Horsepower = 
-                match data.[21] with
+            HighwayMPG = [| yield! this.HighwayMPG; (data[23] |> int) |]
+            Horsepower =
+                match data[21] with
                 | hp when hp |> string = "NA" -> None
                 | hp -> hp |> int |> Some
                 |> Array.singleton
-                |> Array.append this.Horsepower 
-            BodyStyle = Array.append this.BodyStyle (data.[6] |> Array.singleton)
-            DriveWheels = Array.append this.DriveWheels (data.[7] |> Array.singleton)
-            FuelType = Array.append this.FuelType (data.[3] |> Array.singleton) }
+                |> Array.append this.Horsepower
+            BodyStyle = [| yield! this.BodyStyle; data[6] |]
+            DriveWheels = [| yield! this.DriveWheels; data[7] |]
+            FuelType = [| yield! this.FuelType; data[3] |]
+        }
 
 module CarData =
-    let empty =
+    let empty : CarData =
         { Headers = [||]
           HighwayMPG = [||]
           Horsepower = [||]
@@ -44,9 +44,10 @@ type State =
     { Data: IPlotProperty option
       Layout: IPlotProperty option }
 
-let plot' = React.functionComponent (fun (input: {| carData: CarData |}) ->
+[<ReactComponent>]
+let Plot (input: {| carData: CarData |}) : ReactElement =
     let (plotState, setPlotState) = React.useState({ Data = None; Layout = None })
-    
+
     let plotColors = input.carData.Horsepower |> Array.map (fun _ -> 0)
 
     let plotData (selectedPoints: int []) (selectedPlotColors: int []) =
@@ -130,7 +131,7 @@ let plot' = React.functionComponent (fun (input: {| carData: CarData |}) ->
     let updatePoints (points: ResizeArray<Events.PlotDatum>) =
         let points = points |> Array.ofSeq
 
-        let colorPre,selections = 
+        let colorPre,selections =
             points
             |> Array.choose (fun datum ->
                 match datum.pointNumber with
@@ -145,33 +146,30 @@ let plot' = React.functionComponent (fun (input: {| carData: CarData |}) ->
 
         { plotState with Data = plotData selections colors |> Some }
         |> setPlotState
-    
+
     Plotly.plot [
         if plotState.Data.IsSome then plotState.Data.Value
         if plotState.Layout.IsSome then plotState.Layout.Value
         plot.onSelected <| fun o -> o.points |> updatePoints
         plot.onClick <| fun o -> o.points |> updatePoints
     ]
-)
 
-let render (data: CarData)  =
-    plot' {| carData = data |}
-
-let chart' = React.functionComponent (fun (input: {| centeredSpinner: ReactElement |}) ->
+[<ReactComponent>]
+let Chart (centeredSpinner: ReactElement) : ReactElement =
     let isLoading, setLoading = React.useState false
     let error, setError = React.useState<Option<string>> None
     let content, setContent = React.useState CarData.empty
     let path = "https://raw.githubusercontent.com/plotly/datasets/master/imports-85.csv"
 
-    let loadDataset() = 
+    let loadDataset() =
         setLoading(true)
         async {
             let! (statusCode, responseText) = Http.get path
             setLoading(false)
             if statusCode = 200 then
                 let fullData =
-                    responseText.Trim().Split('\n') 
-                    |> Array.map (fun s -> s.Split(','))
+                    responseText.Trim().Split('\n')
+                    |> Array.map _.Split(',')
 
                 fullData
                 |> Array.tail
@@ -180,21 +178,20 @@ let chart' = React.functionComponent (fun (input: {| centeredSpinner: ReactEleme
                 |> setContent
                 setError(None)
             else
-                setError(Some (sprintf "Status %d: could not load %s" statusCode path))
+                setError(Some $"Status {statusCode}: could not load {path}")
         }
         |> Async.StartImmediate
 
     React.useEffect(loadDataset, [| path :> obj |])
 
     match isLoading, error with
-    | true, _ -> input.centeredSpinner
-    | false, None -> 
-        render content
+    | true, _ -> centeredSpinner
+    | false, None ->
+        Plot {| carData = content |}
     | _, Some error ->
         Html.h1 [
             prop.style [ style.color.crimson ]
             prop.text error
-        ])
+        ]
 
-let chart (centeredSpinner: ReactElement) = chart' {| centeredSpinner = centeredSpinner |}
 ```

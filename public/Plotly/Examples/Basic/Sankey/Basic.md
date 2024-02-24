@@ -1,4 +1,4 @@
-﻿# Feliz.Plotly - Sankey Diagrams
+# Feliz.Plotly - Sankey Diagrams
 
 Taken from [Plotly - Sankey Diagrams](https://plot.ly/javascript/sankey-diagram/)
 
@@ -9,7 +9,7 @@ module Samples.Sankey.Basic
 open Feliz
 open Feliz.Plotly
 
-let chart () =
+let chart () : ReactElement =
     Plotly.plot [
         plot.traces [
             traces.sankey [
@@ -40,4 +40,5 @@ let chart () =
             ]
         ]
     ]
+
 ```

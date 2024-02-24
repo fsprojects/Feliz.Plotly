@@ -12,7 +12,7 @@ open Feliz.Plotly
 let dataX = ["Apples";"Apples";"Apples";"Organges"; "Bananas"]
 let dataY = ["5";"10";"3";"10";"5"]
 
-let chart () =
+let chart () : ReactElement =
     Plotly.plot [
         plot.traces [
             traces.histogram [
@@ -29,4 +29,5 @@ let chart () =
             ]
         ]
     ]
+
 ```

@@ -9,7 +9,7 @@ module Samples.ErrorBar.WithBarChart
 open Feliz
 open Feliz.Plotly
 
-let chart () =
+let chart () : ReactElement =
     Plotly.plot [
         plot.traces [
             traces.bar [
@@ -35,4 +35,5 @@ let chart () =
             layout.barmode.group
         ]
     ]
+
 ```

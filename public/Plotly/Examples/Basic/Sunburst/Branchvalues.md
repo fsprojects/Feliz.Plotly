@@ -1,4 +1,4 @@
-﻿# Feliz.Plotly - Sunburst Charts
+# Feliz.Plotly - Sunburst Charts
 
 Taken from [Plotly - Sunburst Charts](https://plot.ly/javascript/sunburst-charts/)
 
@@ -9,7 +9,7 @@ module Samples.Sunburst.Branchvalues
 open Feliz
 open Feliz.Plotly
 
-let chart () =
+let chart () : ReactElement =
     Plotly.plot [
         plot.traces [
             traces.sunburst [
@@ -40,4 +40,5 @@ let chart () =
             ]
         ]
     ]
+
 ```

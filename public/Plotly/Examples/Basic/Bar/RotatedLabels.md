@@ -1,4 +1,4 @@
-﻿# Feliz.Plotly - Bar Charts
+# Feliz.Plotly - Bar Charts
 
 Taken from [Plotly - Bar Charts](https://plot.ly/javascript/bar-charts/)
 
@@ -13,7 +13,7 @@ let xData = [ "Jan"; "Feb"; "Mar"; "Apr"; "May"; "Jun"; "Jul"; "Aug"; "Sep"; "Oc
 let yData = [ 20; 14; 25; 16; 18; 22; 19; 15; 12; 16; 14; 17 ]
 let yData2 = [ 19; 14; 22; 14; 16; 19; 15; 14; 10; 12; 12; 16 ]
 
-let chart () =
+let chart () : ReactElement =
     Plotly.plot [
         plot.traces [
             traces.bar [
@@ -49,4 +49,5 @@ let chart () =
             layout.barmode.group
         ]
     ]
+
 ```

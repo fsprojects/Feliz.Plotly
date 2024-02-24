@@ -1,4 +1,4 @@
-﻿# Feliz.Plotly - Bar Charts
+# Feliz.Plotly - Bar Charts
 
 Taken from [Plotly - Bar Charts](https://plot.ly/javascript/bar-charts/)
 
@@ -13,7 +13,7 @@ let xData = [ 1995; 1996; 1997; 1998; 1999; 2000; 2001; 2002; 2003; 2004; 2005; 
 let yData = [ 219; 146; 112; 127; 124; 180; 236; 207; 236; 263; 350; 430; 474; 526; 488; 537; 500; 439 ]
 let yData2 = [ 16; 13; 10; 11; 28; 37; 43; 55; 56; 88; 105; 156; 270; 299; 340; 403; 549; 499 ]
 
-let chart () =
+let chart () : ReactElement =
     Plotly.plot [
         plot.traces [
             traces.bar [
@@ -67,4 +67,5 @@ let chart () =
             layout.bargroupgap 0.1
         ]
     ]
+
 ```

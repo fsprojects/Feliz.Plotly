@@ -9,7 +9,7 @@ module Samples.CarpetContour.Basic
 open Feliz
 open Feliz.Plotly
 
-let chart () =
+let chart () : ReactElement =
     Plotly.plot [
         plot.traces [
             traces.contourcarpet [
@@ -55,7 +55,7 @@ let chart () =
                 title.text "Cheater plot with 1d input"
             ]
             layout.margin [
-                margin.t 40 
+                margin.t 40
                 margin.r 30
                 margin.b 30
                 margin.l 30
@@ -68,4 +68,5 @@ let chart () =
             ]
         ]
     ]
+
 ```

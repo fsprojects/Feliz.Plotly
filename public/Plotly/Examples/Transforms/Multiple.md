@@ -1,4 +1,4 @@
-﻿# Feliz.Plotly - Multiple Transforms
+# Feliz.Plotly - Multiple Transforms
 
 Taken from [Plotly - Multiple Transforms](https://plot.ly/javascript/multiple-transforms/)
 
@@ -19,17 +19,17 @@ type CsvData =
       LifeExpectancy: float []
       GDPPerCapita: float [] }
 
-    member this.AddDataSet (data: string []) =
+    member this.AddDataSet (data: string []) : CsvData =
         { this with
-            Country = Array.append this.Country (data.[0] |> Array.singleton)
-            Year = Array.append this.Year (data.[1] |> int |> Array.singleton)
-            Population = Array.append this.Population (data.[2] |> float |> Array.singleton)
-            Continent = Array.append this.Continent (data.[3] |> Array.singleton)
-            LifeExpectancy = Array.append this.LifeExpectancy (data.[4] |> float |> Array.singleton)
-            GDPPerCapita = Array.append this.GDPPerCapita (data.[5] |> float |> Array.singleton) }
+            Country    = [| yield! this.Country; data[0] |]
+            Year       = [| yield! this.Year; (data[1] |> int) |]
+            Population = [| yield! this.Population; (data[2] |> float) |]
+            Continent  = [| yield! this.Continent; data[3] |]
+            LifeExpectancy = [| yield! this.LifeExpectancy; (data[4] |> float) |]
+            GDPPerCapita   = [| yield! this.GDPPerCapita; (data[5] |> float) |] }
 
 module CsvData =
-    let empty =
+    let empty : CsvData =
         { Headers = [||]
           Country = [||]
           Year = [||]
@@ -38,7 +38,7 @@ module CsvData =
           LifeExpectancy = [||]
           GDPPerCapita = [||] }
 
-let render (data: CsvData) =
+let render (data: CsvData) : ReactElement =
     Plotly.plot [
         plot.traces [
             traces.scatter [
@@ -134,34 +134,35 @@ let render (data: CsvData) =
         ]
     ]
 
-let chart' = React.functionComponent (fun (input: {| centeredSpinner: ReactElement |}) ->
+[<ReactComponent>]
+let Chart (centeredSpinner: ReactElement) : ReactElement =
     let isLoading, setLoading = React.useState false
     let error, setError = React.useState<Option<string>> None
     let content, setContent = React.useState CsvData.empty
     let path = "https://raw.githubusercontent.com/plotly/datasets/master/gapminderDataFiveYear.csv"
 
-    let loadDataset() = 
+    let loadDataset() =
         setLoading(true)
         async {
             let! (statusCode, responseText) = Http.get path
             setLoading(false)
             if statusCode = 200 then
                 let fullData =
-                    responseText.Trim().Split('\n') 
-                    |> Array.map (fun s -> 
+                    responseText.Trim().Split('\n')
+                    |> Array.map (fun s ->
                         let res = s.Trim().Split(',')
 
                         match (try res |> Array.take 2 |> Some with _ -> None) with
-                        | Some [| elem1; elem2 |] when elem1.StartsWith('"') && elem2.EndsWith('"') ->
+                        | Some [| elem1; elem2 |] when elem1.StartsWith("\"") && elem2.EndsWith("\"") ->
                             elem1.Remove(0,1) + (elem2.Remove(elem2.Length-1,1))
                             |> Array.singleton
-                            |> Array.append 
-                            <| (res.[2..])
+                            |> Array.append
+                            <| res[2..]
                         | _ -> res)
 
                 fullData
                 |> Array.tail
-                |> Array.fold (fun (state: CsvData) (values: string []) -> 
+                |> Array.fold (fun (state: CsvData) (values: string []) ->
                     printfn "%A" values
                     state.AddDataSet values) content
                 |> fun newContent -> { newContent with Headers = fullData |> Array.head }
@@ -175,13 +176,11 @@ let chart' = React.functionComponent (fun (input: {| centeredSpinner: ReactEleme
     React.useEffect(loadDataset, [| path :> obj |])
 
     match isLoading, error with
-    | true, _ -> input.centeredSpinner
+    | true, _ -> centeredSpinner
     | false, None -> render content
     | _, Some error ->
         Html.h1 [
             prop.style [ style.color.crimson ]
             prop.text error
-        ])
-
-let chart (centeredSpinner: ReactElement) = chart' {| centeredSpinner = centeredSpinner |}
+        ]
 ```

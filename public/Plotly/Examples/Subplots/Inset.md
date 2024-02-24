@@ -1,4 +1,4 @@
-﻿# Feliz.Plotly - Inset Plots
+# Feliz.Plotly - Inset Plots
 
 Taken from [Plotly - Inset Plots](https://plot.ly/javascript/insets/)
 
@@ -9,7 +9,7 @@ module Samples.Subplots.Inset
 open Feliz
 open Feliz.Plotly
 
-let chart () =
+let chart () : ReactElement =
     Plotly.plot [
         plot.traces [
             traces.scatter [
@@ -34,4 +34,5 @@ let chart () =
             ])
         ]
     ]
+
 ```

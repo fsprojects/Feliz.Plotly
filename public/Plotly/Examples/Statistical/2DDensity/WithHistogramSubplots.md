@@ -12,12 +12,12 @@ open System
 
 let rng = Random()
 
-let normal () =
+let normal () : float =
     let x = rng.NextDouble() * 2. - 1.
     let y = rng.NextDouble() * 2. - 1.
     let rec boxMullerTransform rds =
         if rds = 0. || rds > 1. then x * rds
-        else 
+        else
             Math.Sqrt(-2. * Math.Log(rds) / rds)
             |> boxMullerTransform
 
@@ -28,14 +28,14 @@ let xData, yData =
     let step i = -1. + 2.2 / 1999. * i
 
     [ 0. .. 1999. ]
-    |> List.map 
+    |> List.map
         (step >>
          fun step ->
             Math.Pow(step, 3.) + (0.3 * normal()),
             Math.Pow(step, 6.) + (0.3 * normal()))
     |> List.unzip
 
-let chart () =
+let chart () : ReactElement =
     Plotly.plot [
         plot.traces [
             traces.scatter [
@@ -111,4 +111,5 @@ let chart () =
             ])
         ]
     ]
+
 ```

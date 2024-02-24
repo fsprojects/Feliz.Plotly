@@ -1,4 +1,4 @@
-﻿# Feliz.Plotly - Bar Charts
+# Feliz.Plotly - Bar Charts
 
 Taken from [Plotly - Bar Charts](https://plot.ly/javascript/bar-charts/)
 
@@ -9,7 +9,7 @@ module Samples.Bar.Waterfall
 open Feliz
 open Feliz.Plotly
 
-let xData = 
+let xData =
     [ "Product<br>Revenue"
       "Services<br>Revenue"
       "Total<br>Revenue"
@@ -21,22 +21,22 @@ let xData =
 let yData = [ 400; 660; 660; 590; 400; 400; 340 ]
 let textList = [ "$430K"; "$260K"; "$690K"; "$-120K"; "$-200K"; "$-320K"; "$370K" ]
 
-let ann =
-    [0..6]
-    |> List.map (fun i ->
+let ann : IAnnotationsProperty list =
+    [ for (xDatum, yDatum, text) in (List.zip3 xData yData textList) ->
         annotations.annotation [
-            annotation.x xData.[i]
-            annotation.y yData.[i]
-            annotation.text textList.[i]
+            annotation.x xDatum
+            annotation.y yDatum
+            annotation.text text
             annotation.font [
                 font.family font.arial
                 font.size 14
                 font.color (color.rgba(245, 246, 249, 1))
             ]
             annotation.showarrow false
-        ])
+        ]
+    ]
 
-let chart () =
+let chart () : ReactElement =
     Plotly.plot [
         plot.traces [
             traces.bar [
@@ -93,4 +93,5 @@ let chart () =
             layout.annotations ann
         ]
     ]
+
 ```

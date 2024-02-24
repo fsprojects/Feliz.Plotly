@@ -1,4 +1,4 @@
-﻿# Feliz.Plotly - Funnel and Funnelarea Charts
+# Feliz.Plotly - Funnel and Funnelarea Charts
 
 Taken from [Plotly - Funnel and Funnelarea Charts](https://plot.ly/javascript/funnel-charts/)
 
@@ -9,7 +9,7 @@ module Samples.Funnel.Basic
 open Feliz
 open Feliz.Plotly
 
-let chart () =
+let chart () : ReactElement =
     Plotly.plot [
         plot.traces [
             traces.funnel [
@@ -36,4 +36,5 @@ let chart () =
             layout.height 500
         ]
     ]
+
 ```

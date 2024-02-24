@@ -12,13 +12,13 @@ open System
 
 let desiredMaximumMarkerSize = 40.
 let size = [ 400.; 600.; 800.; 1000. ]
-let sizeRef = 
-    size 
+let sizeRef : float =
+    size
     |> List.max
     |> fun x -> x * 2.0
     |> fun res ->  res / Math.Pow(desiredMaximumMarkerSize, 2.0)
 
-let chart () =
+let chart () : ReactElement =
     Plotly.plot [
         plot.traces [
             traces.scatter [
@@ -74,4 +74,5 @@ let chart () =
             layout.width 600
         ]
     ]
+
 ```

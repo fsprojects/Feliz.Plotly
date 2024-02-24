@@ -37,7 +37,7 @@ type PlotItem =
       Silt: float list }
 
 module PlotItem =
-    let create label (data: SoilData list) = 
+    let create label (data: SoilData list) : PlotItem =
         let clay, sand, silt =
             data
             |> List.map (fun d ->
@@ -48,7 +48,7 @@ module PlotItem =
           Sand = sand
           Silt = silt }
 
-    let ofSoilTypes soilTypes =
+    let ofSoilTypes soilTypes : PlotItem list =
         [ create "sand" soilTypes.sand
           create "loamy sand" soilTypes.loamysand
           create "sandy loam" soilTypes.sandyloam
@@ -62,11 +62,11 @@ module PlotItem =
           create "silt" soilTypes.silt
           create "loam" soilTypes.loam ]
 
-let render (data: PlotItem list) =
+let render (data: PlotItem list) : ReactElement =
     let scatters =
         [ "#8dd3c7"; "#ffffb3"; "#bebada"; "#fb8072"
           "#80b1d3"; "#fdb462"; "#b3de69"; "#fccde5"
-          "#d9d9d9"; "#bc80bd"; "#ccebc5"; "#ffed6f" ] 
+          "#d9d9d9"; "#bc80bd"; "#ccebc5"; "#ffed6f" ]
         |> List.map2 (fun pItem traceColor ->
             traces.scatterternary [
                 scatterternary.mode.lines
@@ -147,13 +147,14 @@ let render (data: PlotItem list) =
         ]
     ]
 
-let chart' = React.functionComponent (fun (input: {| centeredSpinner: ReactElement |}) ->
+[<ReactComponent>]
+let Chart (centeredSpinner: ReactElement) : ReactElement =
     let isLoading, setLoading = React.useState false
     let error, setError = React.useState<Option<string>> None
     let content, setContent = React.useState []
     let path = "https://gist.githubusercontent.com/davenquinn/988167471993bc2ece29/raw/f38d9cb3dd86e315e237fde5d65e185c39c931c2/data.json"
 
-    let loadDataset() = 
+    let loadDataset() =
         setLoading(true)
         async {
             let! (statusCode, responseText) = Http.get path
@@ -161,32 +162,30 @@ let chart' = React.functionComponent (fun (input: {| centeredSpinner: ReactEleme
             if statusCode = 200 then
                 responseText
                 |> SimpleJson.tryParse
-                |> Option.map 
-                    (SimpleJson.mapKeys (fun k -> k.Replace(" ", "")) 
-                     >> Json.tryConvertFromJsonAs<SoilTypes> 
-                     >> Result.map (PlotItem.ofSoilTypes))
+                |> Option.map
+                    (SimpleJson.mapKeys _.Replace(" ", "")
+                     >> Json.tryConvertFromJsonAs<SoilTypes>
+                     >> Result.map PlotItem.ofSoilTypes)
                 |> function
                 | Some res ->
                     match res with
                     | Ok pItemL -> pItemL |> setContent
-                    | Error e -> setError (Some (sprintf "Error during data transformations:\n%s" e))
+                    | Error e -> setError (Some $"Error during data transformations:\n{e}")
                 | None -> setError (Some "Failed to parse Json data")
                 setError(None)
             else
-                setError(Some (sprintf "Status %d: could not load %s" statusCode path))
+                setError(Some $"Status {statusCode}: could not load {path}")
         }
         |> Async.StartImmediate
 
     React.useEffect(loadDataset, [| path :> obj |])
 
     match isLoading, error with
-    | true, _ -> input.centeredSpinner
+    | true, _ -> centeredSpinner
     | false, None -> render content
     | _, Some error ->
         Html.h1 [
             prop.style [ style.color.crimson ]
             prop.text error
-        ])
-
-let chart (centeredSpinner: ReactElement) = chart' {| centeredSpinner = centeredSpinner |}
+        ]
 ```

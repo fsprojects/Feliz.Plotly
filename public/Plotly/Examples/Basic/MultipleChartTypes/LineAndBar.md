@@ -1,4 +1,4 @@
-﻿# Feliz.Plotly - Multiple Chart Types
+# Feliz.Plotly - Multiple Chart Types
 
 Taken from [Plotly - Multiple Chart Types](https://plot.ly/javascript/graphing-multiple-chart-types/)
 
@@ -9,7 +9,7 @@ module Samples.MultipleChartTypes.LineAndBar
 open Feliz
 open Feliz.Plotly
 
-let chart () =
+let chart () : ReactElement =
     Plotly.plot [
         plot.traces [
             traces.scatter [
@@ -22,4 +22,5 @@ let chart () =
             ]
         ]
     ]
+
 ```

@@ -16,20 +16,21 @@ type TitanicData =
       Survived: int []
       PClass: int []
       Sex: string [] }
-    member this.AddDataSet (data: string []) =
+    member this.AddDataSet (data: string []) : TitanicData =
         { this with
-            Survived = Array.append this.Survived (data.[1] |> int |> Array.singleton)
-            PClass = Array.append this.PClass (data.[2] |> int |> Array.singleton)
-            Sex = Array.append this.Sex (data.[5] |> Array.singleton) }
+            Survived = [| yield! this.Survived; (data[1] |> int) |]
+            PClass = [| yield! this.PClass; (data[2] |> int) |]
+            Sex = [| yield! this.Sex; data[5] |]
+        }
 
 module TitanicData =
-    let empty =
+    let empty : TitanicData =
         { Headers = [||]
           Survived = [||]
           PClass = [||]
           Sex = [||] }
 
-let render (data: TitanicData)  =
+let render (data: TitanicData) : ReactElement =
     Plotly.plot [
         plot.traces [
             traces.parcats [
@@ -73,21 +74,22 @@ let render (data: TitanicData)  =
         ]
     ]
 
-let chart' = React.functionComponent (fun (input: {| centeredSpinner: ReactElement |}) ->
+[<ReactComponent>]
+let Chart (centeredSpinner: ReactElement) : ReactElement =
     let isLoading, setLoading = React.useState false
     let error, setError = React.useState<Option<string>> None
     let content, setContent = React.useState TitanicData.empty
     let path = "https://raw.githubusercontent.com/plotly/datasets/master/titanic.csv"
 
-    let loadDataset() = 
+    let loadDataset() =
         setLoading(true)
         async {
             let! (statusCode, responseText) = Http.get path
             setLoading(false)
             if statusCode = 200 then
                 let fullData =
-                    responseText.Trim().Split('\n') 
-                    |> Array.map (fun s -> s.Split(','))
+                    responseText.Trim().Split('\n')
+                    |> Array.map _.Split(',')
 
                 fullData
                 |> Array.tail
@@ -96,20 +98,19 @@ let chart' = React.functionComponent (fun (input: {| centeredSpinner: ReactEleme
                 |> setContent
                 setError(None)
             else
-                setError(Some (sprintf "Status %d: could not load %s" statusCode path))
+                setError(Some $"Status {statusCode}: could not load {path}")
         }
         |> Async.StartImmediate
 
     React.useEffect(loadDataset, [| path :> obj |])
 
     match isLoading, error with
-    | true, _ -> input.centeredSpinner
+    | true, _ -> centeredSpinner
     | false, None -> render content
     | _, Some error ->
         Html.h1 [
             prop.style [ style.color.crimson ]
             prop.text error
-        ])
+        ]
 
-let chart (centeredSpinner: ReactElement) = chart' {| centeredSpinner = centeredSpinner |}
 ```
