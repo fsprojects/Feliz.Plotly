@@ -1,4 +1,4 @@
-﻿# Feliz.Plotly - Waterfall Charts
+# Feliz.Plotly - Waterfall Charts
 
 Taken from [Plotly - Waterfall Charts](https://plot.ly/javascript/waterfall-charts/)
 
@@ -14,7 +14,7 @@ let xData =
       Some -12; Some -78; Some -12; None; Some 32; Some 89
       None; Some -45; None ]
 
-let measureData = 
+let measureData : IMeasureProperty list =
     [ measure.relative; measure.relative; measure.relative; measure.relative
       measure.total; measure.relative; measure.relative; measure.relative
       measure.relative; measure.total; measure.relative; measure.relative
@@ -27,7 +27,7 @@ let yData =
       "Investment income"; "Financial income"; "Profit before tax"
       "Income tax (15%)"; "Profit after tax" ]
 
-let chart () =
+let chart () : ReactElement =
     Plotly.plot [
         plot.traces [
             traces.waterfall [
@@ -64,4 +64,5 @@ let chart () =
             layout.showlegend true
         ]
     ]
+
 ```

@@ -8,12 +8,13 @@ module Samples.Histogram.Stacked
 
 open Feliz
 open Feliz.Plotly
+open System
 
-let rng = System.Random()
+let rng = Random()
 
 let dataX = [ 0 .. 499 ] |> List.map (fun _ -> rng.NextDouble())
 
-let chart () =
+let chart () : ReactElement =
     Plotly.plot [
         plot.traces [
             traces.histogram [
@@ -27,4 +28,5 @@ let chart () =
             layout.barmode.stack
         ]
     ]
+
 ```

@@ -9,7 +9,7 @@ module Samples.Line.LabellingLinesWithAnnotations
 open Feliz
 open Feliz.Plotly
 
-let xData = 
+let xData =
     [2001; 2002; 2003; 2004; 2005; 2006; 2007; 2008; 2009; 2010; 2011; 2013]
     |> List.replicate 4
 
@@ -19,48 +19,48 @@ let yData =
       [ 13; 14; 20; 24; 20; 24; 24; 40; 35; 41; 43; 50]
       [ 18; 21; 18; 21; 16; 14; 13; 18; 17; 16; 19; 23] ]
 
-let plotcolor = 
+let plotcolors =
     [ color.rgba(67, 67, 67, 1.)
       color.rgba(115, 115, 115, 1.)
       color.rgba(49, 130, 189, 1.)
       color.rgba(189, 189, 189, 1.) ]
 
-let lineSize = [ 2; 2; 4; 2 ]
+let lineSizes = [ 2; 2; 4; 2 ]
 
 let labels = ["Television"; "Newspaper"; "Internet"; "Radio"]
 
-let traces' =
+let traces' : ITracesProperty list =
     [ 0 .. 3 ]
     |> List.collect (fun i ->
         [ traces.scatter [
-            scatter.x xData.[i]
-            scatter.y yData.[i]
+            scatter.x xData[i]
+            scatter.y yData[i]
             scatter.mode.lines
             scatter.line [
-                line.color plotcolor.[i]
-                line.width lineSize.[i]
+                line.color plotcolors[i]
+                line.width lineSizes[i]
             ]
           ]
           traces.scatter [
-            scatter.x xData.[i]
-            scatter.y yData.[i]
+            scatter.x xData[i]
+            scatter.y yData[i]
             scatter.mode.markers
             scatter.marker [
-                marker.color plotcolor.[i]
+                marker.color plotcolors[i]
                 marker.size 12
             ]
           ] ])
 
-let tracesAnnotations =
+let tracesAnnotations : IAnnotationsProperty list =
     [ 0 .. xData.Length-1 ]
     |> List.collect (fun i ->
         [ annotations.annotation [
             annotation.xref.paper
             annotation.x 0.05
-            annotation.y yData.[i].Head
+            annotation.y yData[i].Head
             annotation.xanchor.right
             annotation.yanchor.middle
-            annotation.text (sprintf "%s %i%s" labels.[i] yData.[i].Head "%")
+            annotation.text (sprintf "%s %i%s" labels[i] yData[i].Head "%")
             annotation.font [
                 font.family font.arial
                 font.size 16
@@ -71,20 +71,20 @@ let tracesAnnotations =
           annotations.annotation [
             annotation.xref.paper
             annotation.x 0.95
-            annotation.y yData.[i].[11]
+            annotation.y yData[i].[11]
             annotation.xanchor.left
             annotation.yanchor.middle
-            annotation.text (sprintf "%i%s" yData.[i].[11] "%")
+            annotation.text (sprintf "%i%s" yData[i].[11] "%")
             annotation.font [
                 font.family font.arial
                 font.size 16
                 font.color color.black
             ]
             annotation.showarrow false
-          ]  
+          ]
         ])
 
-let chart () =
+let chart () : ReactElement =
     Plotly.plot [
         plot.traces traces'
         plot.layout [
@@ -154,4 +154,5 @@ let chart () =
             ]
         ]
     ]
+
 ```

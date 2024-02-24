@@ -8,10 +8,11 @@ module Samples.TwoDimensionalHistogram.BivariateNormalDistribution
 
 open Feliz
 open Feliz.Plotly
+open System
 
-let rng = System.Random()
+let rng = Random()
 
-let chart () =
+let chart () : ReactElement =
     Plotly.plot [
         plot.traces [
             traces.histogram2d [
@@ -20,4 +21,5 @@ let chart () =
             ]
         ]
     ]
+
 ```

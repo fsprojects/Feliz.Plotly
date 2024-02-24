@@ -1,14 +1,17 @@
-﻿# Feliz.Plotly - Downloading Images Programmatically
+# Feliz.Plotly - Downloading Images Programmatically
 
 ```fsharp:plotly-chart-events-downloadimage
+[<RequireQualifiedAccess>]
+module Samples.Events.DownloadImage
+
 open Feliz
 open Feliz.Plotly
 open Zanaptak.TypedCssClasses
 
-type Bulma = CssClasses<"https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.5/css/bulma.min.css", Naming.PascalCase>
-type FA = CssClasses<"https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css", Naming.PascalCase>
+type Bulma = CssClasses<"https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css", Naming.PascalCase>
+type FA = CssClasses<"https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css", Naming.PascalCase>
 
-let plot = React.functionComponent(fun () ->
+let plot () =
     Plotly.plot [
         plot.traces [
             traces.bar [
@@ -17,10 +20,11 @@ let plot = React.functionComponent(fun () ->
             ]
         ]
         plot.divId "myChart"
-    ])
+    ]
 
-let buttons = React.functionComponent(fun () ->
-    let imgSrc,setImgSrc = React.useState(None)
+[<ReactComponent>]
+let Buttons () : ReactElement =
+    let imgSrc, setImgSrc = React.useState(None)
 
     Html.div [
         Html.div [
@@ -31,15 +35,15 @@ let buttons = React.functionComponent(fun () ->
             ]
             prop.children [
                 Html.button [
-                    prop.classes [ 
+                    prop.classes [
                         Bulma.Button
                         Bulma.HasBackgroundPrimary
-                        Bulma.HasTextWhite 
+                        Bulma.HasTextWhite
                     ]
                     prop.style [
                         style.maxWidth (length.em 5)
                     ]
-                    prop.onClick <| fun _ -> 
+                    prop.onClick <| fun _ ->
                         Plotly.downloadImage("myChart", [
                             downloadImage.fileName "DownloadImageExample"
                             // this is the default
@@ -50,15 +54,15 @@ let buttons = React.functionComponent(fun () ->
                     prop.text "Download"
                 ]
                 Html.button [
-                    prop.classes [ 
+                    prop.classes [
                         Bulma.Button
                         Bulma.HasBackgroundPrimary
-                        Bulma.HasTextWhite 
+                        Bulma.HasTextWhite
                     ]
                     prop.style [
                         style.maxWidth (length.em 8)
                     ]
-                    prop.onClick <| fun _ -> 
+                    prop.onClick <| fun _ ->
                         async {
                             let! imgUrl =
                                 Plotly.toImage("myChart", [
@@ -79,11 +83,12 @@ let buttons = React.functionComponent(fun () ->
             Html.img [
                 prop.src imgSrc.Value
             ]
-    ])
+    ]
 
-let chart () =
+let chart () : ReactElement =
     Html.div [
         plot()
-        buttons()
+        Buttons()
     ]
+
 ```

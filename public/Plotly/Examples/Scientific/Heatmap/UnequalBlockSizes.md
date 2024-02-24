@@ -96,4 +96,5 @@ let chart () =
             layout.autosize false
         ]
     ]
+
 ```

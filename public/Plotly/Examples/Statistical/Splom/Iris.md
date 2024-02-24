@@ -6,28 +6,28 @@ Taken from [Plotly - Splom](https://plot.ly/javascript/splom/)
 [<RequireQualifiedAccess>]
 module Samples.Splom.Iris
 
-open Fable.Core
 open Fable.SimpleHttp
 open Feliz
 open Feliz.Plotly
 
 type IrisData =
     { Headers: string []
-      SepalLength: float [] 
+      SepalLength: float []
       SepalWidth: float []
       PetalLength: float []
       PetalWidth: float []
       Class: string [] }
-    member this.AddDataSet (data: string []) =
+    member this.AddDataSet (data: string []) : IrisData =
         { this with
-            SepalLength = Array.append this.SepalLength (data.[0] |> float |> Array.singleton)
-            SepalWidth = Array.append this.SepalWidth (data.[1] |> float |> Array.singleton)
-            PetalLength = Array.append this.PetalLength (data.[2] |> float |> Array.singleton)
-            PetalWidth = Array.append this.PetalWidth (data.[3] |> float |> Array.singleton)
-            Class = Array.append this.Class (data.[4] |> Array.singleton) }
+            SepalLength = [| yield! this.SepalLength; (data[0] |> float) |]
+            SepalWidth =  [| yield! this.SepalWidth; (data[1] |> float) |]
+            PetalLength = [| yield! this.PetalLength; (data[2] |> float) |]
+            PetalWidth =  [| yield! this.PetalWidth; (data[3] |> float) |]
+            Class =       [| yield! this.Class; data[4] |]
+        }
 
 module IrisData =
-    let empty =
+    let empty : IrisData =
         { Headers = [||]
           SepalLength = [||]
           SepalWidth = [||]
@@ -35,7 +35,7 @@ module IrisData =
           PetalWidth = [||]
           Class = [||] }
 
-let render (data: IrisData) =
+let render (data: IrisData) : ReactElement =
     let plotColors =
         data.Class
         |> Array.map (fun c ->
@@ -120,21 +120,22 @@ let render (data: IrisData) =
         ]
     ]
 
-let chart' = React.functionComponent (fun (input: {| centeredSpinner: ReactElement |}) ->
+[<ReactComponent>]
+let Chart (centeredSpinner: ReactElement) : ReactElement =
     let isLoading, setLoading = React.useState false
     let error, setError = React.useState<Option<string>> None
     let content, setContent = React.useState IrisData.empty
     let path = "https://raw.githubusercontent.com/plotly/datasets/master/iris-data.csv"
 
-    let loadDataset() = 
+    let loadDataset() =
         setLoading(true)
         async {
             let! (statusCode, responseText) = Http.get path
             setLoading(false)
             if statusCode = 200 then
                 let fullData =
-                    responseText.Trim().Split('\n') 
-                    |> Array.map (fun s -> s.Split(','))
+                    responseText.Trim().Split('\n')
+                    |> Array.map _.Split(',')
 
                 fullData
                 |> Array.tail
@@ -143,20 +144,19 @@ let chart' = React.functionComponent (fun (input: {| centeredSpinner: ReactEleme
                 |> setContent
                 setError(None)
             else
-                setError(Some (sprintf "Status %d: could not load %s" statusCode path))
+                setError(Some $"Status {statusCode}: could not load {path}")
         }
         |> Async.StartImmediate
 
     React.useEffect(loadDataset, [| path :> obj |])
 
     match isLoading, error with
-    | true, _ -> input.centeredSpinner
+    | true, _ -> centeredSpinner
     | false, None -> render content
     | _, Some error ->
         Html.h1 [
             prop.style [ style.color.crimson ]
             prop.text error
-        ])
+        ]
 
-let chart (centeredSpinner: ReactElement) = chart' {| centeredSpinner = centeredSpinner |}
 ```

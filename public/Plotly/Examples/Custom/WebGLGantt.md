@@ -1,4 +1,4 @@
-﻿# Feliz.Plotly - Custom Charts
+# Feliz.Plotly - Custom Charts
 
 ```fsharp:plotly-chart-custom-webglgantt
 [<RequireQualifiedAccess>]
@@ -12,22 +12,22 @@ let rng = Random()
 
 type GanttData =
     { Task: string
-      Start: System.DateTime
-      Finish: System.DateTime } 
+      Start: DateTime
+      Finish:DateTime }
 
 type Task =
-    { x0: System.DateTime
-      x1: System.DateTime
+    { x0: DateTime
+      x1: DateTime
       y0: float
       y1: float
       name: string }
 
-let chart () =
+let chart () : ReactElement =
     let tasks =
-        [ 0 .. 2000 ]
-        |> List.map (fun i -> 
+        [ 0 .. 200 ]
+        |> List.map (fun i ->
             let month = rng.Next(1,12)
-            let start = rng.Next(1, 29) 
+            let start = rng.Next(1, 29)
             { Task = sprintf "Task %i" i
               Start = DateTime(2019, (if month > 1 then month-1 else month), start)
               Finish = DateTime(2019, month, rng.Next(start, 30)) })
@@ -39,11 +39,11 @@ let chart () =
               y1 = (float i) + 0.4
               name = gd.Task })
 
-    let getCornerPoints task =
+    let getCornerPoints (task: Task) =
         {| x = [ task.x0; task.x1; task.x1; task.x0 ]
            y = [ task.y0; task.y0; task.y1; task.y1 ] |}
 
-    let scatters =
+    let scatters : ITracesProperty list =
         tasks
         |> List.map (fun task ->
             let cps = getCornerPoints task
@@ -56,97 +56,68 @@ let chart () =
                 scattergl.name task.name
             ])
 
-    Plotly.plot [
-        plot.style [
-            style.minWidth (length.vh 50)
-            style.minHeight (length.vh 70)
+    Html.div [
+        prop.style [
+            style.paddingLeft (length.em 2)
+            style.paddingRight (length.em 1)
+            style.width (length.percent 100)
+            style.height (length.percent 100)
         ]
-        plot.traces scatters
-        plot.layout [
-            layout.autosize true
-            layout.hovermode.closest
-            layout.margin [
-                margin.r 30
-                margin.pad 10
-            ]
-            layout.showlegend false
-            layout.title [
-                title.text "Task Schedule"
-            ]
-            layout.xaxis [
-                xaxis.rangeselector [
-                    rangeselector.buttons [
-                        buttons.button [
-                            button.count 7
-                            button.label "1w"
-                            button.step.day
-                            button.stepmode.backward
-                        ]
-                        buttons.button [
-                            button.count 1
-                            button.label "1m"
-                            button.step.month
-                            button.stepmode.backward
-                        ]
-                        buttons.button [
-                            button.count 6
-                            button.label "6m"
-                            button.step.month
-                            button.stepmode.backward
-                        ]
-                        buttons.button [
-                            button.count 1
-                            button.label "YTD"
-                            button.step.year
-                            button.stepmode.todate
-                        ]
-                        buttons.button [
-                            button.count 1
-                            button.label "1y"
-                            button.step.year
-                            button.stepmode.backward
-                        ]
-                        buttons.button [
-                            button.step.all
-                        ]
+        prop.children [
+            Plotly.plot [
+                plot.style [
+                    style.minWidth (length.percent 100)
+                    //style.height (tasks.Length * 20)
+                ]
+                plot.traces scatters
+                plot.layout [
+                    layout.autosize true
+                    layout.height (tasks.Length * 20)
+                    layout.hovermode.closest
+                    layout.margin [
+                        margin.r 30
+                        margin.pad 10
+                        margin.b 10
+                    ]
+                    layout.showlegend false
+                    layout.title [ title.text "Task Schedule" ]
+                    layout.xaxis [
+                        xaxis.showgrid true
+                        xaxis.range [ DateTime(2019, 1, 1); DateTime(2019, 12, 31) ]
+                        xaxis.side.top
+                        xaxis.tickfont [ tickfont.size 10 ]
+                        xaxis.type'.date
+                        xaxis.zeroline false
+                    ]
+                    layout.yaxis [
+                        yaxis.automargin true
+                        yaxis.autorange.false'
+                        yaxis.fixedrange true
+                        yaxis.range [ -1; tasks.Length ]
+                        yaxis.showgrid true
+                        yaxis.tickfont [ tickfont.size 12 ]
+                        yaxis.ticktext (tasks |> List.map (fun t -> t.name + "  "))
+                        yaxis.tickvals [ 0 .. (tasks.Length-1) ]
+                        yaxis.zeroline false
                     ]
                 ]
-                xaxis.showgrid true
-                xaxis.tickfont [
-                    tickfont.size 10
+                plot.config [
+                    config.autosizable true
+                    config.displaylogo false
+                    config.doubleClick.resetAndAutosize
+                    config.modeBarButtonsToRemove [
+                        modeBarButtons.autoScale2d
+                        modeBarButtons.hoverCompareCartesian
+                        modeBarButtons.hoverClosestCartesian
+                        modeBarButtons.toggleSpikelines
+                        modeBarButtons.zoomIn2d
+                        modeBarButtons.zoomOut2d
+                    ]
+                    config.responsive true
+                    config.showAxisDragHandles false
                 ]
-                xaxis.type'.date
-                xaxis.zeroline false
             ]
-            layout.yaxis [
-                yaxis.automargin true
-                yaxis.autorange.false'
-                yaxis.fixedrange true
-                yaxis.range [ -1; tasks.Length ]
-                yaxis.showgrid true
-                yaxis.tickfont [
-                    tickfont.size 12
-                ]
-                yaxis.ticktext (tasks |> List.map (fun t -> t.name + "  "))
-                yaxis.tickvals [ 0 .. (tasks.Length-1) ]
-                yaxis.zeroline false
-            ]
-        ]
-        plot.config [
-            config.autosizable true
-            config.displaylogo false
-            config.doubleClick.resetAndAutosize
-            config.modeBarButtonsToRemove [
-                modeBarButtons.autoScale2d
-                modeBarButtons.hoverCompareCartesian
-                modeBarButtons.hoverClosestCartesian
-                modeBarButtons.toggleSpikelines
-                modeBarButtons.zoomIn2d
-                modeBarButtons.zoomOut2d
-            ]
-            config.responsive true
-            config.scrollZoom.true'
-            config.showAxisDragHandles false
         ]
     ]
+
 ```

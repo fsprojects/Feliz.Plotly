@@ -1,4 +1,4 @@
-﻿# Feliz.Plotly - Treemaps
+# Feliz.Plotly - Treemaps
 
 Taken from [Plotly - Treemaps](https://plot.ly/javascript/treemaps/)
 
@@ -9,7 +9,7 @@ module Samples.Treemap.Basic
 open Feliz
 open Feliz.Plotly
 
-let chart () =
+let chart () : ReactElement =
     Plotly.plot [
         plot.traces [
             traces.treemap [
@@ -18,4 +18,5 @@ let chart () =
             ]
         ]
     ]
+
 ```

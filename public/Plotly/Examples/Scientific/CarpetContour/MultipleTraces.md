@@ -66,7 +66,7 @@ module PlotData =
 
 let ofOption error = function Some s -> Ok s | None -> Error error
 
-type ResultBuilder() =
+type ResultBuilder () =
     member __.Return(x) = Ok x
 
     member __.ReturnFrom(m: Result<_, _>) = m
@@ -76,9 +76,9 @@ type ResultBuilder() =
 
     member __.Zero() = None
 
-let result = new ResultBuilder()
+let result = ResultBuilder()
 
-let render (data: PlotData) =
+let render (data: PlotData) : ReactElement =
     Plotly.plot [
         plot.traces [
             traces.carpet [
@@ -234,13 +234,14 @@ let render (data: PlotData) =
         ]
     ]
 
-let chart' = React.functionComponent (fun (input: {| centeredSpinner: ReactElement |}) ->
+[<ReactComponent>]
+let Chart (centeredSpinner: ReactElement) : ReactElement =
     let isLoading, setLoading = React.useState false
     let error, setError = React.useState<Option<string>> None
     let content, setContent = React.useState PlotData.empty
     let path = "https://raw.githubusercontent.com/bcdunbar/datasets/master/airfoil_data.json"
 
-    let loadDataset() = 
+    let loadDataset() =
         setLoading(true)
         async {
             let! (statusCode, responseText) = Http.get path
@@ -259,11 +260,11 @@ let chart' = React.functionComponent (fun (input: {| centeredSpinner: ReactEleme
                         let! jS2 = jScatter2 |> Json.tryConvertFromJsonAs<ScatterData>
                         let! jST = jScatterText |> Json.tryConvertFromJsonAs<ScatterDataWithText>
 
-                        let builtData = 
+                        let builtData =
                             { Carpet = c
                               ContourCarpet = cC
                               ContourCarpet2 = cC2
-                              ContourCarpet3 = cC3 
+                              ContourCarpet3 = cC3
                               Scatter = jS
                               Scatter2 = jS2
                               ScatterWithText = jST }
@@ -271,12 +272,12 @@ let chart' = React.functionComponent (fun (input: {| centeredSpinner: ReactEleme
                         return builtData
                     }
                     |> function
-                    | Ok res -> 
+                    | Ok res ->
                         res
                         |> setContent
                         setError(None)
                     | Error e ->
-                        setError(Some (sprintf "Status %d: Failed parsing JSON object:\n%s" statusCode e))
+                        setError(Some $"Status {statusCode}: Failed parsing JSON object:\n{e}")
                 | _ -> setError(Some "Failed to parse JSON Object")
             else
                 setError(Some (sprintf "Status %d: could not load %s" statusCode path))
@@ -286,13 +287,13 @@ let chart' = React.functionComponent (fun (input: {| centeredSpinner: ReactEleme
     React.useEffect(loadDataset, [| path :> obj |])
 
     match isLoading, error with
-    | true, _ -> input.centeredSpinner
+    | true, _ -> centeredSpinner
     | false, None -> render content
     | _, Some error ->
         Html.h1 [
             prop.style [ style.color.crimson ]
             prop.text error
-        ])
+        ]
 
-let chart (centeredSpinner: ReactElement) = chart' {| centeredSpinner = centeredSpinner |}
+
 ```

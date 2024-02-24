@@ -8,10 +8,11 @@ module Samples.Histogram.Overlaid
 
 open Feliz
 open Feliz.Plotly
+open System
 
-let rng = System.Random()
+let rng = Random()
 
-let chart () =
+let chart () : ReactElement =
     Plotly.plot [
         plot.traces [
             traces.histogram [
@@ -33,4 +34,5 @@ let chart () =
             layout.barmode.overlay
         ]
     ]
+
 ```

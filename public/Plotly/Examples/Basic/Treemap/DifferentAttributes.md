@@ -1,4 +1,4 @@
-﻿# Feliz.Plotly - Treemaps
+# Feliz.Plotly - Treemaps
 
 Taken from [Plotly - Treemaps](https://plot.ly/javascript/treemaps/)
 
@@ -12,7 +12,7 @@ open Feliz.Plotly
 let labels = [ "Eve"; "Cain"; "Seth"; "Enos"; "Noam"; "Abel"; "Awan"; "Enoch"; "Azura" ]
 let parents = [ ""; "Eve"; "Eve"; "Seth"; "Seth"; "Eve"; "Eve"; "Awan"; "Eve" ]
 
-let chart () =
+let chart () : ReactElement =
     Plotly.plot [
         plot.traces [
             traces.treemap [
@@ -97,4 +97,5 @@ let chart () =
             ]
         ]
     ]
+
 ```

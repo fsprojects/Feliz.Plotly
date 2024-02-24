@@ -1,4 +1,4 @@
-﻿# Feliz.Plotly - Bar Charts
+# Feliz.Plotly - Bar Charts
 
 Taken from [Plotly - Bar Charts](https://plot.ly/javascript/bar-charts/)
 
@@ -9,7 +9,7 @@ module Samples.Bar.Stacked
 open Feliz
 open Feliz.Plotly
 
-let chart () =
+let chart () : ReactElement =
     Plotly.plot [
         plot.traces [
             traces.bar [
@@ -22,10 +22,11 @@ let chart () =
                 bar.y [ 12; 18; 29 ]
                 bar.name "LA Zoo"
             ]
-            
+
         ]
         plot.layout [
             layout.barmode.stack
         ]
     ]
+
 ```

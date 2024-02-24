@@ -14,14 +14,14 @@ let lon =
       None; Some 30; Some 30; Some 50; Some 50
       Some 30; None; Some 100; Some 100; Some 80
       Some 80; Some 100 ]
-    
+
 let lat =
     [ Some 30; Some 6; Some 6; Some 30; Some 30
       None; Some 20; Some 30; Some 30; Some 20
       Some 20; None; Some 40; Some 50; Some 50
       Some 40; Some 40]
 
-let chart () =
+let chart () : ReactElement =
     Plotly.plot [
         plot.traces [
             traces.scattermapbox [
@@ -45,4 +45,5 @@ let chart () =
             layout.width 700
         ]
     ]
+
 ```

@@ -9,7 +9,7 @@ module Samples.Polar.Area
 open Feliz
 open Feliz.Plotly
 
-let chart () =
+let chart () : ReactElement =
     Plotly.plot [
         plot.traces [
             traces.scatterpolar [
@@ -73,4 +73,5 @@ let chart () =
             ]
         ]
     ]
+
 ```

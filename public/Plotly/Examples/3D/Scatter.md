@@ -19,21 +19,21 @@ type CsvData =
       Y2: float option []
       Z2: float option [] }
 
-    member this.AddDataSet (data: string []) =
-        let emptyToNoneFloat input = 
-            try float input |> Some 
+    member this.AddDataSet (data: string []) : CsvData =
+        let emptyToNoneFloat input =
+            try float input |> Some
             with _ -> None
 
         { this with
-            X1 = Array.append this.X1 (data.[0] |> float |> Array.singleton)
-            Y1 = Array.append this.Y1 (data.[1] |> float |> Array.singleton)
-            Z1 = Array.append this.Z1 (data.[2] |> float |> Array.singleton)
-            X2 = Array.append this.X2 (data.[3] |> emptyToNoneFloat |> Array.singleton)
-            Y2 = Array.append this.Y2 (data.[4] |> emptyToNoneFloat |> Array.singleton)
-            Z2 = Array.append this.Z2 (data.[5] |> emptyToNoneFloat |> Array.singleton) }
+            X1 = Array.append this.X1 (data[0] |> float |> Array.singleton)
+            Y1 = Array.append this.Y1 (data[1] |> float |> Array.singleton)
+            Z1 = Array.append this.Z1 (data[2] |> float |> Array.singleton)
+            X2 = Array.append this.X2 (data[3] |> emptyToNoneFloat |> Array.singleton)
+            Y2 = Array.append this.Y2 (data[4] |> emptyToNoneFloat |> Array.singleton)
+            Z2 = Array.append this.Z2 (data[5] |> emptyToNoneFloat |> Array.singleton) }
 
 module CsvData =
-    let empty =
+    let empty : CsvData =
         { Headers = [||]
           X1 = [||]
           Y1 = [||]
@@ -42,7 +42,7 @@ module CsvData =
           Y2 = [||]
           Z2 = [||] }
 
-let render (data: CsvData) =
+let render (data: CsvData) : ReactElement =
     Plotly.plot [
         plot.traces [
             traces.scatter3d [
@@ -78,20 +78,21 @@ let render (data: CsvData) =
         ]
     ]
 
-let chart' = React.functionComponent (fun (input: {| centeredSpinner: ReactElement |}) ->
+[<ReactComponent>]
+let Chart (centeredSpinner: ReactElement) : ReactElement =
     let isLoading, setLoading = React.useState false
     let error, setError = React.useState<Option<string>> None
     let content, setContent = React.useState CsvData.empty
     let path = "https://raw.githubusercontent.com/plotly/datasets/master/3d-scatter.csv"
 
-    let loadDataset() = 
+    let loadDataset() =
         setLoading(true)
         async {
             let! (statusCode, responseText) = Http.get path
             setLoading(false)
             if statusCode = 200 then
                 let fullData =
-                    responseText.Trim().Split('\n') 
+                    responseText.Trim().Split('\n')
                     |> Array.map (fun s -> s.Split(','))
 
                 fullData
@@ -99,7 +100,7 @@ let chart' = React.functionComponent (fun (input: {| centeredSpinner: ReactEleme
                 |> Array.fold (fun (state: CsvData) (values: string []) -> state.AddDataSet values) content
                 |> fun newContent -> { newContent with Headers = fullData |> Array.head }
                 |> setContent
-                    
+
                 setError(None)
             else
                 setError(Some (sprintf "Status %d: could not load %s" statusCode path))
@@ -109,13 +110,11 @@ let chart' = React.functionComponent (fun (input: {| centeredSpinner: ReactEleme
     React.useEffect(loadDataset, [| path :> obj |])
 
     match isLoading, error with
-    | true, _ -> input.centeredSpinner
+    | true, _ -> centeredSpinner
     | false, None -> render content
     | _, Some error ->
         Html.h1 [
             prop.style [ style.color.crimson ]
             prop.text error
-        ])
-
-let chart (centeredSpinner: ReactElement) = chart' {| centeredSpinner = centeredSpinner |}
+        ]
 ```

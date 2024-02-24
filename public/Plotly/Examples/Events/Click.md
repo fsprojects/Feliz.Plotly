@@ -1,4 +1,4 @@
-﻿# Feliz.Plotly - Click Events
+# Feliz.Plotly - Click Events
 
 Taken from [Plotly - Click Events](https://plot.ly/javascript/click-events/)
 
@@ -6,7 +6,6 @@ Taken from [Plotly - Click Events](https://plot.ly/javascript/click-events/)
 [<RequireQualifiedAccess>]
 module Samples.Events.Click
 
-open Fable.Core
 open Feliz
 open Feliz.Plotly
 
@@ -24,8 +23,9 @@ let yData = getYData 1
 let yData2 = getYData 2
 let yData3 = getYData 3
 
-let chart = React.functionComponent (fun () ->
-    let anns,setAnns = React.useState []
+[<ReactComponent>]
+let Chart () : ReactElement =
+    let annotationsProperties, setAnns = React.useState []
 
     Plotly.plot [
         plot.traces [
@@ -51,12 +51,12 @@ let chart = React.functionComponent (fun () ->
         plot.layout [
             layout.hovermode.closest // When this value is set click and hover events always return a singleton in `ev.points`
             layout.title "Annotations on click"
-            layout.annotations anns
+            layout.annotations annotationsProperties
         ]
         plot.onClick <| fun ev ->
-            ev.points 
+            ev.points
             |> List.ofSeq
-            |> List.choose (fun datum -> 
+            |> List.choose (fun datum ->
                 match datum.x, datum.y with
                 | Events.Int x, Events.Float y ->
                     annotations.annotation [
@@ -67,5 +67,6 @@ let chart = React.functionComponent (fun () ->
                     |> Some
                 | _ -> None)
             |> setAnns
-    ])
+    ]
+
 ```

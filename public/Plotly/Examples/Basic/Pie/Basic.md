@@ -1,4 +1,4 @@
-﻿# Feliz.Plotly - Pie Charts
+# Feliz.Plotly - Pie Charts
 
 Taken from [Plotly - Pie Charts](https://plot.ly/javascript/pie-charts/)
 
@@ -9,7 +9,7 @@ module Samples.Pie.Basic
 open Feliz
 open Feliz.Plotly
 
-let chart () =
+let chart () : ReactElement =
     Plotly.plot [
         plot.traces [
             traces.pie [
@@ -22,4 +22,5 @@ let chart () =
             layout.width 500
         ]
     ]
+
 ```

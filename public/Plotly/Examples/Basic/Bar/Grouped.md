@@ -1,4 +1,4 @@
-﻿# Feliz.Plotly - Bar Charts
+# Feliz.Plotly - Bar Charts
 
 Taken from [Plotly - Bar Charts](https://plot.ly/javascript/bar-charts/)
 
@@ -9,7 +9,7 @@ module Samples.Bar.Grouped
 open Feliz
 open Feliz.Plotly
 
-let chart () =
+let chart () : ReactElement =
     Plotly.plot [
         plot.traces [
             traces.bar [
@@ -27,4 +27,5 @@ let chart () =
             layout.barmode.group
         ]
     ]
+
 ```

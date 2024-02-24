@@ -1,4 +1,4 @@
-﻿# Feliz.Plotly - Locales in Config
+# Feliz.Plotly - Locales in Config
 
 You can configure localization on a per-plot basis through
 inline locale registration.
@@ -12,7 +12,7 @@ module Samples.Locales.Config
 open Feliz
 open Feliz.Plotly
 
-let chart () =
+let chart () : ReactElement =
     Plotly.plot [
         plot.traces [
             traces.bar [
@@ -43,4 +43,5 @@ let chart () =
             ]
         ]
     ]
+
 ```

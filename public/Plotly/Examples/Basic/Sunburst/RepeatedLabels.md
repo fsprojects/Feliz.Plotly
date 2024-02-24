@@ -1,4 +1,4 @@
-﻿# Feliz.Plotly - Sunburst Charts
+# Feliz.Plotly - Sunburst Charts
 
 Taken from [Plotly - Sunburst Charts](https://plot.ly/javascript/sunburst-charts/)
 
@@ -24,47 +24,47 @@ let ids =
       "Australian Rules"
       "Autstralia - American Football"
       "Australia - Rugby"
-      "Rugby League" 
+      "Rugby League"
       "Rugby Union" ]
 
 
 let labels =
-    [ "North<br>America" 
-      "Europe" 
-      "Australia" 
-      "Football" 
-      "Soccer" 
+    [ "North<br>America"
+      "Europe"
+      "Australia"
+      "Football"
+      "Soccer"
       "Rugby"
-      "Football" 
-      "Rugby" 
-      "American<br>Football" 
-      "Football" 
+      "Football"
+      "Rugby"
+      "American<br>Football"
+      "Football"
       "Association"
-      "Australian<br>Rules" 
-      "American<br>Football" 
-      "Rugby" 
+      "Australian<br>Rules"
+      "American<br>Football"
+      "Rugby"
       "Rugby<br>League"
       "Rugby<br>Union" ]
 
 let parents =
     [ ""
-      "" 
-      "" 
-      "North America" 
-      "North America" 
-      "North America" 
+      ""
+      ""
+      "North America"
+      "North America"
+      "North America"
       "Europe"
-      "Europe" 
       "Europe"
-      "Australia" 
-      "Australia - Football" 
+      "Europe"
+      "Australia"
       "Australia - Football"
-      "Australia - Football" 
-      "Australia - Football" 
+      "Australia - Football"
+      "Australia - Football"
+      "Australia - Football"
       "Australia - Rugby"
       "Australia - Rugby" ]
 
-let chart () =
+let chart () : ReactElement =
     Plotly.plot [
         plot.traces [
             traces.sunburst [
@@ -96,4 +96,5 @@ let chart () =
             ]
         ]
     ]
+
 ```

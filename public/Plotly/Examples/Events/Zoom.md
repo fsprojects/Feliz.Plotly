@@ -1,4 +1,4 @@
-﻿# Feliz.Plotly - Zoom Events
+# Feliz.Plotly - Zoom Events
 
 Taken from [Plotly - Zoom Events](https://plot.ly/javascript/zoom-events/)
 
@@ -18,7 +18,8 @@ let alert s = jsNative
 let xData = [ 1 .. 100 ]
 let yData = xData |> List.map (fun _ -> rng.NextDouble())
 
-let chart = React.functionComponent (fun () ->
+[<ReactComponent>]
+let Chart () : ReactElement =
     Plotly.plot [
         plot.traces [
             traces.scatter [
@@ -33,9 +34,10 @@ let chart = React.functionComponent (fun () ->
         plot.onRelayout <| fun ev ->
             match ev.``xaxis.range[0]``, ev.``xaxis.range[1]`` with
             | Events.Int x, Events.Int x2 ->
-                sprintf "Xaxis Start: %i%sXaxis End: %i" 
+                sprintf "Xaxis Start: %i%sXaxis End: %i"
                     x System.Environment.NewLine x2
                 |> alert
             | _ -> ()
-    ])
+    ]
+
 ```

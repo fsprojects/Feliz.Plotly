@@ -10,29 +10,29 @@ open Fable.SimpleHttp
 open Feliz
 open Feliz.Plotly
 
-let render (data: float [] []) =
+let render (data: float [] []) : ReactElement =
     let startsX = Array.replicate 16 80
-    
-    let startsY = 
-        Array.replicate 4 [| 20 .. 10 .. 50 |] 
+
+    let startsY =
+        Array.replicate 4 [| 20 .. 10 .. 50 |]
         |> Array.concat
-    
+
     let startsZ =
-        Array.replicate 4 (Array.replicate 4 0) 
-        |> Array.mapi (fun i aList -> 
+        Array.replicate 4 (Array.replicate 4 0)
+        |> Array.mapi (fun i aList ->
             aList |> Array.map (fun _ -> i * 5))
         |> Array.concat
 
     Plotly.plot [
         plot.traces [
             traces.streamtube [
-                streamtube.x data.[3]
-                streamtube.y data.[4]
-                streamtube.z data.[5]
-                streamtube.u data.[0]
-                streamtube.v data.[1]
-                streamtube.w data.[2]
-                
+                streamtube.x data[3]
+                streamtube.y data[4]
+                streamtube.z data[5]
+                streamtube.u data[0]
+                streamtube.v data[1]
+                streamtube.w data[2]
+
                 streamtube.starts [
                     starts.x startsX
                     starts.y startsY
@@ -63,20 +63,21 @@ let render (data: float [] []) =
         ]
     ]
 
-let chart' = React.functionComponent (fun (input: {| centeredSpinner: ReactElement |}) ->
+[<ReactComponent>]
+let Chart (centeredSpinner: ReactElement) =
     let isLoading, setLoading = React.useState false
     let error, setError = React.useState<Option<string>> None
     let content, setContent = React.useState [||]
     let path = "https://raw.githubusercontent.com/plotly/datasets/master/streamtube-wind.csv"
 
-    let loadDataset() = 
+    let loadDataset() =
         setLoading(true)
         async {
             let! (statusCode, responseText) = Http.get path
             setLoading(false)
             if statusCode = 200 then
                 let fullData =
-                    responseText.Trim().Split('\n') 
+                    responseText.Trim().Split('\n')
                     |> Array.map (fun s -> s.Trim().Split(','))
 
                 fullData
@@ -93,7 +94,7 @@ let chart' = React.functionComponent (fun (input: {| centeredSpinner: ReactEleme
     React.useEffect(loadDataset, [| path :> obj |])
 
     match isLoading, error with
-    | true, _ -> input.centeredSpinner
+    | true, _ -> centeredSpinner
     | false, None when Array.isEmpty content |> not -> render content
     | _, Some error ->
         Html.h1 [
@@ -103,6 +104,5 @@ let chart' = React.functionComponent (fun (input: {| centeredSpinner: ReactEleme
     | _ -> Html.h1 [
             prop.style [ style.color.crimson ]
             prop.text "Failed to load data."
-        ])
-
-let chart (centeredSpinner: ReactElement) = chart' {| centeredSpinner = centeredSpinner |}```
+        ]
+```

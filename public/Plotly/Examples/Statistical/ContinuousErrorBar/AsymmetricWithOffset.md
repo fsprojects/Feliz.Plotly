@@ -10,7 +10,7 @@ open Feliz
 open Feliz.Plotly
 open System
 
-let randomDates (dates: (int * int * int) list) (count: int) =
+let randomDates (dates: (int * int * int) list) (count: int) : DateTime list =
     dates
     |> Seq.ofList // See https://github.com/fable-compiler/Fable/issues/1934
     |> Seq.chunkBySize 2
@@ -23,7 +23,7 @@ let randomDates (dates: (int * int * int) list) (count: int) =
         | [ (y,m,d); (y2,m2,d2) ] ->
             let startDate = DateTime(y,m,d).Ticks
             let endDate = DateTime(y2,m2,d2).Ticks
-            (startDate - endDate) 
+            (startDate - endDate)
             |> (fun n -> n * (i |> int64))
             |> ((+) startDate)
             |> DateTime
@@ -35,7 +35,7 @@ let randomNumber num mul =
     [ 1 .. num ]
     |> List.map (fun _ -> rng.Next() * mul)
 
-let chart () =
+let chart () : ReactElement =
     Plotly.plot [
         plot.traces [
             traces.scatter [
@@ -88,4 +88,5 @@ let chart () =
             ]
         ]
     ]
+
 ```
