@@ -65,6 +65,8 @@ let relaxedNameLinting =
       __SOURCE_DIRECTORY__ @@ "src/Feliz.Plotly/*.fs" ]
 
 // Read additional information from the release notes document
+
+printfn $"Source directory: {__SOURCE_DIRECTORY__}"
 let release = ReleaseNotes.load (__SOURCE_DIRECTORY__ @@ "RELEASE_NOTES.md")
 
 // Helper active pattern for project types

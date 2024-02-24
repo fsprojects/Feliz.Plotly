@@ -6,3 +6,5 @@ Fake.DotNet.AssemblyInfoFile
 Fake.DotNet.Cli
 Fake.JavaScript.Yarn
 FSharp.Json
+Fake.DotNet.Paket
+Fake.Tools.Git

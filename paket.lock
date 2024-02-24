@@ -1,11 +1,11 @@
-RESTRICTION: || (== net7.0) (== net8.0) (== netstandard2.0)
+RESTRICTION: || (== net8.0) (== netstandard2.0)
 NUGET
   remote: https://www.nuget.org/api/v2
     FSharp.Core (8.0.200) - content: none
 
 GROUP build
 STORAGE: NONE
-RESTRICTION: == net7.0
+RESTRICTION: == net8.0
 NUGET
   remote: https://api.nuget.org/v3/index.json
     BlackFox.VsWhere (1.1)
@@ -96,6 +96,13 @@ NUGET
       FSharp.Core (>= 6.0.3)
       Newtonsoft.Json (>= 13.0.1)
       NuGet.Protocol (>= 6.0)
+    Fake.DotNet.Paket (6.0)
+      Fake.Core.Process (>= 6.0)
+      Fake.Core.String (>= 6.0)
+      Fake.Core.Trace (>= 6.0)
+      Fake.DotNet.Cli (>= 6.0)
+      Fake.IO.FileSystem (>= 6.0)
+      FSharp.Core (>= 6.0.3)
     Fake.IO.FileSystem (6.0)
       Fake.Core.String (>= 6.0)
       Fake.Core.Trace (>= 6.0)
@@ -106,6 +113,14 @@ NUGET
     Fake.Net.Http (6.0)
       Fake.Core.Trace (>= 6.0)
       FSharp.Core (>= 6.0.3)
+    Fake.Tools.Git (6.0)
+      Fake.Core.Environment (>= 6.0)
+      Fake.Core.Process (>= 6.0)
+      Fake.Core.SemVer (>= 6.0)
+      Fake.Core.String (>= 6.0)
+      Fake.Core.Trace (>= 6.0)
+      Fake.IO.FileSystem (>= 6.0)
+      FSharp.Core (>= 6.0.3)
     FParsec (1.1.1)
       FSharp.Core (>= 4.3.4)
     FSharp.Control.Reactive (5.0.5)
@@ -115,23 +130,12 @@ NUGET
     FSharp.Json (0.4.1)
       FSharp.Core (>= 4.6.2)
     Microsoft.Build.Framework (17.9.5)
-      Microsoft.Win32.Registry (>= 5.0)
-      System.Memory (>= 4.5.5)
-      System.Runtime.CompilerServices.Unsafe (>= 6.0)
-      System.Security.Principal.Windows (>= 5.0)
     Microsoft.Build.Utilities.Core (17.9.5)
       Microsoft.Build.Framework (>= 17.9.5)
       Microsoft.NET.StringTools (>= 17.9.5)
-      Microsoft.Win32.Registry (>= 5.0)
       System.Collections.Immutable (>= 8.0)
       System.Configuration.ConfigurationManager (>= 8.0)
-      System.Memory (>= 4.5.5)
-      System.Runtime.CompilerServices.Unsafe (>= 6.0)
-      System.Security.Principal.Windows (>= 5.0)
-      System.Text.Encoding.CodePages (>= 7.0)
     Microsoft.NET.StringTools (17.9.5)
-      System.Memory (>= 4.5.5)
-      System.Runtime.CompilerServices.Unsafe (>= 6.0)
     Microsoft.Win32.Registry (5.0)
       System.Security.AccessControl (>= 5.0)
       System.Security.Principal.Windows (>= 5.0)
@@ -160,15 +164,12 @@ NUGET
       System.Security.Cryptography.ProtectedData (>= 8.0)
     System.Diagnostics.EventLog (8.0)
     System.Formats.Asn1 (8.0)
-    System.Memory (4.5.5)
     System.Reactive (5.0)
-    System.Runtime.CompilerServices.Unsafe (6.0)
     System.Security.AccessControl (6.0)
     System.Security.Cryptography.Pkcs (8.0)
       System.Formats.Asn1 (>= 8.0)
     System.Security.Cryptography.ProtectedData (8.0)
     System.Security.Principal.Windows (5.0)
-    System.Text.Encoding.CodePages (8.0)
 
 GROUP Docs
 NUGET
