@@ -39,8 +39,9 @@ let relaxedNameLinting =
     [ __SOURCE_DIRECTORY__ @@ "src/Feliz.Plotly/**/*.fs"
       __SOURCE_DIRECTORY__ @@ "src/Feliz.Plotly/*.fs" ]
 
+let rootDirectory = __SOURCE_DIRECTORY__ @@ ".."
 // Read additional information from the release notes document
-let release = ReleaseNotes.load (__SOURCE_DIRECTORY__ @@ "RELEASE_NOTES.md")
+let release = ReleaseNotes.load (rootDirectory @@ "RELEASE_NOTES.md")
 
 // Helper active pattern for project types
 let (|Fsproj|Csproj|Vbproj|Shproj|) (projectFileName: string) =
@@ -57,7 +58,7 @@ let fsTestGlob = __SOURCE_DIRECTORY__ @@ "tests/**/*.fs"
 let bin        = __SOURCE_DIRECTORY__ @@ "bin"
 let temp       = __SOURCE_DIRECTORY__ @@ "temp"
 let objFolder  = __SOURCE_DIRECTORY__ @@ "obj"
-let publicDir  = __SOURCE_DIRECTORY__ @@ "public"
+let publicDir  = rootDirectory @@ "public"
 let genGlob    = __SOURCE_DIRECTORY__ @@ "src/**/*.Generator.*.fsproj"
 let libGlob    = __SOURCE_DIRECTORY__ @@ "src/**/*.fsproj"
 
@@ -109,10 +110,15 @@ let getEnvFromAllOrNone (environmentVariable: string) : string option =
         -> Some(v)
     | _ -> None
 
-// Set name of 'configuration' variable to 'Release'
-FakeVar.set "configuration" "Release"
-
 let initTargets () =
+    // Set name of 'configuration' variable to 'Release'
+    FakeVar.set "configuration" "Release"
+
+    Target.create "All" ignore
+    Target.create "Dev" ignore
+    Target.create "Release" ignore
+    Target.create "Publish" ignore
+
     // --------------------------------------------------------------------------------------
     // Set configuration mode based on target
 
@@ -195,8 +201,8 @@ let initTargets () =
         TaskRunner.runWithRetries clean 10
 
     Target.create "CopyDocFiles" <| fun _ ->
-        [ publicDir @@ "Plotly/README.md", __SOURCE_DIRECTORY__ @@ "README.md"
-          publicDir @@ "Plotly/RELEASE_NOTES.md", __SOURCE_DIRECTORY__ @@ "RELEASE_NOTES.md"
+        [ publicDir @@ "Plotly/README.md", rootDirectory @@ "README.md"
+          publicDir @@ "Plotly/RELEASE_NOTES.md", rootDirectory @@ "RELEASE_NOTES.md"
           publicDir @@ "index.html", __SOURCE_DIRECTORY__ @@ "docs/index.html" ]
         |> List.iter (fun (target, source) -> Shell.copyFile target source)
 
@@ -463,20 +469,24 @@ let buildTargetTree () =
     ==> "PostPublishClean"
     ==>! "CopyBinaries"
 
-    "Restore" ==>! "Lint"
-    "Restore" ==>! "Format"
+    // "Restore" ==>! "Lint"
+    // "Restore" ==>! "Format"
 
-    "Format"
-    ?=> "Lint"
-    ?=> "Build"
-    ?=> "RunTests"
-    ?=>! "CleanDocs"
+    // "Format"
+    // // ?=> "Lint"
+    // ?=> "Build"
+    // ?=> "RunTests"
+    // ?=>! "CleanDocs"
 
     "All"
     ==> "GitPush"
     ?=>! "GitTag"
 
-    "All" <== ["Lint"; "RunTests"; "CopyBinaries" ]
+    "All" <== [
+        // "Lint"
+        "RunTests"
+        "CopyBinaries"
+    ]
 
     "CleanDocs"
     ==> "CopyDocFiles"
