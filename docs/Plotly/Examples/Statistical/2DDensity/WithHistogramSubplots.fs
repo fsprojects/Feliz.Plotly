@@ -21,14 +21,13 @@ let normal () : float =
 
 let xData, yData =
     let step i = -1. + 2.2 / 1999. * i
+    let pow step =
+        Math.Pow(step, 3.) + (0.3 * normal()),
+        Math.Pow(step, 6.) + (0.3 * normal())
 
-    [ 0. .. 1999. ]
-    |> List.map
-        (step >>
-         fun step ->
-            Math.Pow(step, 3.) + (0.3 * normal()),
-            Math.Pow(step, 6.) + (0.3 * normal()))
-    |> List.unzip
+    [ for i in 0. .. 1999. do
+        i |> step |> pow
+    ] |> List.unzip
 
 let chart () : ReactElement =
     Plotly.plot [

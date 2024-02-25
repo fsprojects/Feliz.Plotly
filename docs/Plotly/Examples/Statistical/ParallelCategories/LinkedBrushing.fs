@@ -45,7 +45,7 @@ let Plot (input: {| carData: CarData |}) : ReactElement =
 
     let plotColors = input.carData.Horsepower |> Array.map (fun _ -> 0)
 
-    let plotData (selectedPoints: int []) (selectedPlotColors: int []) =
+    let plotData (selectedPoints: int []) (selectedPlotColors: int []) : IPlotProperty =
         plot.traces [
             traces.scatter [
                 scatter.x input.carData.Horsepower
