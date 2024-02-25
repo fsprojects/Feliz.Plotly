@@ -1,13 +1,15 @@
 # This workflow will build a .NET project
 # For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-net
 
-name: Publish nuget package
+name: Publish to Github Pages
 
 on:
   push:
     branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
+    paths:
+    - "docs/**"
+    - "public/**"
+    - ".github/workflows/publish-docs.yml"
 
 jobs:
   build:
@@ -24,9 +26,7 @@ jobs:
         dotnet tool restore
         dotnet paket restore
         dotnet restore
-    - name: Build
+    - name: Build dotnet projects
       run: dotnet build --no-restore
-    - name: Pack
-      run: dotnet pack --no-build --no-restore --include-source --include-symbols -c Release -o .
-    - name: Test
-      run: dotnet test --no-build --verbosity normal
+    - name: Publish documentation to gh-pages
+      run: yarn publish-docs
