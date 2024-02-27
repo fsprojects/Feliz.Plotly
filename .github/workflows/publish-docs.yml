@@ -35,4 +35,4 @@ jobs:
     - name: Build dotnet projects
       run: dotnet build --no-restore
     - name: Publish documentation to gh-pages
-      run: yarn publish-docs-ci
+      run: yarn publish
