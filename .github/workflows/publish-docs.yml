@@ -32,6 +32,7 @@ jobs:
         dotnet tool restore
         dotnet paket restore
         dotnet restore
+        yarn install
     - name: Build dotnet projects
       run: dotnet build --no-restore
     - name: List directory
