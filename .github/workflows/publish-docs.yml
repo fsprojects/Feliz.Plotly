@@ -21,6 +21,10 @@ jobs:
       uses: actions/setup-dotnet@v3
       with:
         dotnet-version: 8.0.x
+    - name: List directory
+      run: ls -la
+    - name: See current directory
+      run: pwd
     - name: Restore dependencies
       run: |
         dotnet tool restore
