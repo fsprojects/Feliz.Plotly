@@ -21,12 +21,6 @@ jobs:
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: 8.0.x
-    - name: List directory
-      run: ls -la
-    - name: List parent directory
-      run: ls .. -la
-    - name: See current directory
-      run: pwd
     - name: Restore dependencies
       run: |
         dotnet tool restore
@@ -34,5 +28,11 @@ jobs:
         dotnet restore
     - name: Build dotnet projects
       run: dotnet build --no-restore
+    - name: List directory
+      run: ls -la
+    - name: List parent directory
+      run: ls .. -la
+    - name: See current directory
+      run: pwd
     - name: Publish documentation to gh-pages
       run: yarn publish
