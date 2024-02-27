@@ -35,4 +35,4 @@ jobs:
     - name: See current directory
       run: pwd
     - name: Publish documentation to gh-pages
-      run: yarn publish
+      run: yarn publish-docs
