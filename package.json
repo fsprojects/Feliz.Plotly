@@ -14,9 +14,11 @@
   },
   "scripts": {
     "build": "dotnet tool restore && dotnet fable ./docs --run vite build",
+    "build-ci": "dotnet tool restore && dotnet fable ./docs --run vite build -c vite.config.ci.js",
     "compile-demo-raw": "npx fable-splitter",
     "generate": "dotnet run --project ./src/Feliz.Generator.Plotly",
     "publish-docs": "yarn build && gh-pages -d dist",
+    "publish-docs-ci": "yarn build-ci && gh-pages -d dist",
     "start": "dotnet tool restore && dotnet fable watch ./docs --runFast vite",
     "dotnet-pack": "dotnet pack src/Feliz.Plotly/ -o ."
   },
