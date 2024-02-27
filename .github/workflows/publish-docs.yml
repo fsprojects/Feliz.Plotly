@@ -27,8 +27,8 @@ jobs:
         check-latest: true
     - name: Set git name and email
       run: |
-        git config --global user.name "GitHub Actions"
-        git config --global user.email "github-actions@github.com"
+        git config --global user.name "Kurt Mueller"
+        git config --global user.email "kurtronaldmueller@gmail.com"
     - name: Install Yarn
       run: npm install -g yarn
     - name: Restore dependencies
