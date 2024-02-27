@@ -1,4 +1,4 @@
-﻿# Feliz.Plotly - Groupby
+# Feliz.Plotly - Groupby
 
 Taken from [Plotly - Groupby](https://plot.ly/javascript/group-by/)
 
@@ -17,7 +17,7 @@ let subjects =
 let scores =
     [ 1; 6; 2; 8; 2; 9; 4; 5; 1; 5; 2; 8 ]
 
-let chart () =
+let chart () : ReactElement =
     Plotly.plot [
         plot.traces [
             traces.scatter [
@@ -58,4 +58,5 @@ let chart () =
             ]
         ]
     ]
+
 ```

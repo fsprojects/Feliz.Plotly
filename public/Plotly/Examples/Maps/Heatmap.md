@@ -9,7 +9,7 @@ module Samples.Maps.Heatmap
 open Feliz
 open Feliz.Plotly
 
-let chart () =
+let chart () : ReactElement =
     Plotly.plot [
         plot.traces [
             traces.densitymapbox [
@@ -26,4 +26,5 @@ let chart () =
             ]
         ]
     ]
+
 ```

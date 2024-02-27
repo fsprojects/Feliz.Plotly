@@ -1,4 +1,4 @@
-﻿# Feliz.Plotly - Custom Charts
+# Feliz.Plotly - Custom Charts
 
 ```fsharp:plotly-chart-custom-gantt
 [<RequireQualifiedAccess>]
@@ -12,24 +12,25 @@ let rng = Random()
 
 type GanttData =
     { Task: string
-      Start: System.DateTime
-      Finish: System.DateTime } 
+      Start: DateTime
+      Finish: DateTime }
 
 type Task =
-    { x0: System.DateTime
-      x1: System.DateTime
+    { x0: DateTime
+      x1: DateTime
       y0: float
       y1: float
       name: string }
 
-let chart () =
+let chart () : ReactElement =
     let tasks =
         [ 0 .. 20 ]
-        |> List.map (fun i -> 
-            let start = rng.Next(1, 29) 
-            { Task = sprintf "Task %i" i
-              Start = DateTime(2019, 11, start)
-              Finish = DateTime(2019, 11, rng.Next(start, 30)) })
+        |> List.map (fun i ->
+            let month = rng.Next(1,12)
+            let start = rng.Next(1, 29)
+            { Task = $"Task {i}"
+              Start = DateTime(2019, (if month > 1 then month-1 else month), start)
+              Finish = DateTime(2019, month, rng.Next(start, 30)) })
         |> List.rev
         |> List.mapi (fun i gd ->
             { x0 = gd.Start
@@ -38,13 +39,12 @@ let chart () =
               y1 = (float i) + 0.4
               name = gd.Task })
 
-    let getCornerPoints task =
+    let getCornerPoints (task: Task) =
         {| x = [ task.x0; task.x1; task.x1; task.x0 ]
            y = [ task.y0; task.y0; task.y1; task.y1 ] |}
 
-    let scatters =
-        tasks
-        |> List.map (fun task ->
+    let scatters : ITracesProperty list =
+        [ for task in tasks do
             let cps = getCornerPoints task
             traces.scatter [
                 scatter.x cps.x
@@ -53,30 +53,29 @@ let chart () =
                 scatter.fill.toself
                 scatter.hoverinfo.name
                 scatter.name task.name
-            ])
+            ]
+        ]
 
     Plotly.plot [
-        plot.traces (scatters)
+        plot.style [
+            style.minWidth (length.vh 50)
+            style.minHeight (length.vh 70)
+        ]
+        plot.traces scatters
         plot.layout [
-            layout.title [
-                title.text "Gantt Chart"
+            layout.autosize true
+            layout.hovermode.closest
+            layout.margin [
+                margin.r 30
+                margin.pad 10
             ]
             layout.showlegend false
-            layout.height 800
-            layout.width 1000
-            layout.shapes []
-            layout.hovermode.closest
-            layout.yaxis [
-                yaxis.showgrid true
-                yaxis.ticktext (tasks |> List.map (fun t -> t.name))
-                yaxis.tickvals [ 0 .. (tasks.Length-1) ]
-                yaxis.range [ -1; tasks.Length ]
-                yaxis.autorange.false'
-                yaxis.zeroline false
+            layout.title "Task Schedule"
+            layout.transition [
+                transition.duration 1000
+                transition.easing.cubicInOut
             ]
             layout.xaxis [
-                xaxis.showgrid true
-                xaxis.zeroline false
                 xaxis.rangeselector [
                     rangeselector.buttons [
                         buttons.button [
@@ -114,8 +113,43 @@ let chart () =
                         ]
                     ]
                 ]
+                xaxis.showgrid true
+                xaxis.tickfont [
+                    tickfont.size 10
+                ]
                 xaxis.type'.date
+                xaxis.zeroline false
+            ]
+            layout.yaxis [
+                yaxis.automargin true
+                yaxis.autorange.false'
+                yaxis.fixedrange true
+                yaxis.range [ -1; tasks.Length ]
+                yaxis.showgrid true
+                yaxis.tickfont [
+                    tickfont.size 12
+                ]
+                yaxis.ticktext (tasks |> List.map (fun t -> t.name + "  "))
+                yaxis.tickvals [ 0 .. (tasks.Length-1) ]
+                yaxis.zeroline false
             ]
         ]
+        plot.config [
+            config.autosizable true
+            config.displaylogo false
+            config.doubleClick.resetAndAutosize
+            config.modeBarButtonsToRemove [
+                modeBarButtons.autoScale2d
+                modeBarButtons.hoverCompareCartesian
+                modeBarButtons.hoverClosestCartesian
+                modeBarButtons.toggleSpikelines
+                modeBarButtons.zoomIn2d
+                modeBarButtons.zoomOut2d
+            ]
+            config.responsive true
+            config.scrollZoom.true'
+            config.showAxisDragHandles false
+        ]
     ]
+
 ```

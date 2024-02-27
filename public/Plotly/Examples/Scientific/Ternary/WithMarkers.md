@@ -14,7 +14,7 @@ type TernaryData =
       Developer: int
       Designer: int
       Label: string }
-    
+
 [<RequireQualifiedAccess>]
 module TernaryData =
     let create journalist developer designer label =
@@ -43,7 +43,7 @@ type TernarySet =
 module TernarySet =
     let create dataSet = { Data = dataSet }
 
-let plotData = 
+let plotData : TernarySet =
     [ TernaryData.create 75 25 0 "point 1"
       TernaryData.create 70 10 20 "point 2"
       TernaryData.create 75 20 5 "point 3"
@@ -57,7 +57,7 @@ let plotData =
       TernaryData.create 20 10 70 "point 11" ]
     |> TernarySet.create
 
-let chart () =
+let chart () : ReactElement =
     Plotly.plot [
         plot.traces [
             traces.scatterternary [
@@ -144,4 +144,5 @@ let chart () =
             layout.paperBgcolor "#FFF1E0"
         ]
     ]
+
 ```

@@ -1,4 +1,4 @@
-﻿# Feliz.Plotly - Tables
+# Feliz.Plotly - Tables
 
 Taken from [Plotly - Tables](https://plot.ly/javascript/table/)
 
@@ -6,11 +6,10 @@ Taken from [Plotly - Tables](https://plot.ly/javascript/table/)
 [<RequireQualifiedAccess>]
 module Samples.Table.Styled
 
-open Fable.Core
 open Feliz
 open Feliz.Plotly
 
-let values =
+let values : PlotData list  =
     [ PlotData.String [ "Salaries"; "Office"; "Merchandise"; "Legal"; "<b>TOTAL</b>" ]
       PlotData.Int [ 1200000; 20000; 80000; 2000; 12120000 ]
       PlotData.Int [ 1300000; 20000; 70000; 2000; 130902000 ]
@@ -20,11 +19,11 @@ let values =
 let headers =
     [ [ "<b>EXPENSES</b>" ]
       [ "<b>Q1</b>" ]
-      [ "<b>Q2</b>" ] 
+      [ "<b>Q2</b>" ]
       [ "<b>Q3</b>" ]
       [ "<b>Q4</b>" ] ]
 
-let chart () =
+let chart () : ReactElement =
     Plotly.plot [
         plot.traces [
             traces.table [
@@ -72,4 +71,5 @@ let chart () =
             layout.height 350
         ]
     ]
+
 ```

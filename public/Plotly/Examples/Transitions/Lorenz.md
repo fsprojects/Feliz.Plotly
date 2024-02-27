@@ -20,12 +20,13 @@ let setTimeout (f: unit -> unit) (timeout: int) : int = jsNative
 
 let rng = System.Random()
 
-let plotLorenz = React.functionComponent(fun (data: {| x: float list; y: float list |}) ->
+[<ReactComponent>]
+let PlotLorenz (x: float list, y: float list) : ReactElement =
     Plotly.plot [
         plot.traces [
             traces.scatter [
-                scatter.x data.x
-                scatter.y data.y
+                scatter.x x
+                scatter.y y
                 scatter.mode.markers
             ]
         ]
@@ -54,9 +55,9 @@ let plotLorenz = React.functionComponent(fun (data: {| x: float list; y: float l
         plot.config [
             config.displayModeBar.false'
         ]
-    ])
+    ]
 
-let initX, initY, initZ = 
+let initX, initY, initZ =
     List.init 100 (fun _ -> rng.NextDouble() * 2. - 1.),
     List.init 100 (fun _ -> rng.NextDouble() * 2. - 1.),
     List.init 100 (fun _ -> 30. + rng.NextDouble() * 10.)
@@ -67,9 +68,8 @@ module Constants =
     let r = 28.
     let dt = 0.015
 
-let calcLorenz data =
-    data
-    |> List.map (fun (x, y, z) ->
+let calcLorenz (data: seq<float * float * float>) =
+    [ for x, y, z in data do
         let dx = Constants.s * (y - x)
         let dy = x * (Constants.r - z) - y
         let dz = x * y - Constants.b * z
@@ -84,23 +84,26 @@ let calcLorenz data =
 
         x + dx * Constants.dt,
         y + dy * Constants.dt,
-        z + dz * Constants.dt)
+        z + dz * Constants.dt
+    ]
 
-let chart = React.functionComponent(fun () ->
+[<ReactComponent>]
+let Chart () : ReactElement =
     let data,setData = React.useState(List.zip3 initX initY initZ)
-    
-    React.useEffect(fun () -> 
-        let subId = 
+
+    React.useEffect(fun () ->
+        let subId =
             setTimeout (fun _ -> setData (calcLorenz data)) 0
         React.createDisposable(fun () -> clearTimeout(subId))
     )
 
     let plotLorenz =
         React.useMemo((fun () ->
-            data 
+            data
             |> List.unzip3
-            |> fun (x, _, y) -> plotLorenz {| x = x; y = y |}
+            |> fun (x, _, y) -> PlotLorenz (x, y)
         ), [| data |])
 
-    plotLorenz)
+    plotLorenz
+
 ```

@@ -1,4 +1,4 @@
-﻿# Feliz.Plotly - Candlestick Charts With Range Breaks
+# Feliz.Plotly - Candlestick Charts With Range Breaks
 
 ```fsharp:plotly-chart-candlestick-rangebreaks
 [<RequireQualifiedAccess>]
@@ -8,7 +8,7 @@ open Feliz
 open Feliz.Plotly
 open System
 
-let xData =
+let xData : DateTime list =
     let startDate = DateTime(2017, 1, 3)
 
     List.unfold (fun d ->
@@ -40,7 +40,7 @@ let openData =
       121.669998; 122.139999; 120.93; 121.150002; 127.029999; 127.980003; 128.309998; 129.130005
       130.539993; 131.350006; 131.649994; 132.460007; 133.080002; 133.470001; 135.520004 ]
 
-let chart () =
+let chart () : ReactElement =
     Plotly.plot [
         plot.traces [
             traces.candlestick [
@@ -98,4 +98,5 @@ let chart () =
             ]
         ]
     ]
+
 ```

@@ -26,4 +26,5 @@ let chart () =
                 heatmapgl.colorscale color.colorscale.picnic
             ]
         ]
-    ]```
+    ]
+```

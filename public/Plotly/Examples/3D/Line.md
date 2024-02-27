@@ -17,7 +17,7 @@ type CsvData =
       Z: float []
       Colors: int [] }
 
-    member this.AddDataSet (data: string []) =
+    member this.AddDataSet (data: string []) : CsvData =
         { this with
             X = Array.append this.X (data.[0] |> float |> Array.singleton)
             Y = Array.append this.Y (data.[1] |> float |> Array.singleton)
@@ -25,14 +25,14 @@ type CsvData =
             Colors = Array.append this.Colors (data.[3] |> int |> Array.singleton) }
 
 module CsvData =
-    let empty =
+    let empty : CsvData =
         { Headers = [||]
           X = [||]
           Y = [||]
           Z = [||]
           Colors = [||] }
 
-let render (data: CsvData) =
+let render (data: CsvData) : ReactElement =
     Plotly.plot [
         plot.traces [
             traces.scatter3d [
@@ -53,20 +53,21 @@ let render (data: CsvData) =
         ]
     ]
 
-let chart' = React.functionComponent (fun (input: {| centeredSpinner: ReactElement |}) ->
+[<ReactComponent>]
+let Chart (centeredSpinner: ReactElement) : ReactElement =
     let isLoading, setLoading = React.useState false
     let error, setError = React.useState<Option<string>> None
     let content, setContent = React.useState CsvData.empty
     let path = "https://raw.githubusercontent.com/plotly/datasets/master/3d-line1.csv"
 
-    let loadDataset() = 
+    let loadDataset() =
         setLoading(true)
         async {
             let! (statusCode, responseText) = Http.get path
             setLoading(false)
             if statusCode = 200 then
                 let fullData =
-                    responseText.Trim().Split('\n') 
+                    responseText.Trim().Split('\n')
                     |> Array.map (fun s -> s.Split(','))
 
                 fullData
@@ -76,20 +77,18 @@ let chart' = React.functionComponent (fun (input: {| centeredSpinner: ReactEleme
                 |> setContent
                 setError(None)
             else
-                setError(Some (sprintf "Status %d: could not load %s" statusCode path))
+                setError(Some $"Status {statusCode}: could not load {path}")
         }
         |> Async.StartImmediate
 
     React.useEffect(loadDataset, [| path :> obj |])
 
     match isLoading, error with
-    | true, _ -> input.centeredSpinner
+    | true, _ -> centeredSpinner
     | false, None -> render content
     | _, Some error ->
         Html.h1 [
             prop.style [ style.color.crimson ]
             prop.text error
-        ])
-
-let chart (centeredSpinner: ReactElement) = chart' {| centeredSpinner = centeredSpinner |}
+        ]
 ```

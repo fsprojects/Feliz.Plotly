@@ -11,7 +11,7 @@ open Feliz.Plotly
 
 let thetaData = [ "North"; "N-E"; "East"; "S-E"; "South"; "S-W"; "West"; "N-W" ]
 
-let chart () =
+let chart () : ReactElement =
     Plotly.plot [
         plot.traces [
             traces.barpolar [
@@ -73,4 +73,5 @@ let chart () =
             ]
         ]
     ]
+
 ```

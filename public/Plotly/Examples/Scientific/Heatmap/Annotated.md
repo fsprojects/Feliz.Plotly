@@ -22,7 +22,7 @@ let annotations =
     |> List.map2 (fun zList y ->
         xData
         |> List.map2 (fun z x ->
-            annotations.annotation [ 
+            annotations.annotation [
                 annotation.xref.x 1
                 annotation.yref.y 1
                 annotation.x x
@@ -40,7 +40,7 @@ let annotations =
     ) zData
     |> List.concat
 
-let chart () =
+let chart () : ReactElement =
     Plotly.plot [
         plot.traces [
             traces.heatmap [
@@ -69,4 +69,5 @@ let chart () =
             layout.autosize false
         ]
     ]
+
 ```

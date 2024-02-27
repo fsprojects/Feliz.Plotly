@@ -9,7 +9,7 @@ module Samples.Line.LineShapeOptionsInterpolation
 open Feliz
 open Feliz.Plotly
 
-let chart () =
+let chart () : ReactElement =
     Plotly.plot [
         plot.traces [
             traces.scatter [
@@ -32,12 +32,12 @@ let chart () =
                     scatter.mode.markers
                 ]
                 scatter.name "Spline"
-                scatter.text 
+                scatter.text
                     [ "tweak line smoothness&lt;br&gt;with \"smoothing\" in line object"
-                      "tweak line smoothness&lt;br&gt;with \"smoothing\" in line object" 
-                      "tweak line smoothness&lt;br&gt;with \"smoothing\" in line object" 
-                      "tweak line smoothness&lt;br&gt;with \"smoothing\" in line object" 
-                      "tweak line smoothness&lt;br&gt;with \"smoothing\" in line object" 
+                      "tweak line smoothness&lt;br&gt;with \"smoothing\" in line object"
+                      "tweak line smoothness&lt;br&gt;with \"smoothing\" in line object"
+                      "tweak line smoothness&lt;br&gt;with \"smoothing\" in line object"
+                      "tweak line smoothness&lt;br&gt;with \"smoothing\" in line object"
                       "tweak line smoothness&lt;br&gt;with \"smoothing\" in line object" ]
                 scatter.line [
                     line.shape.spline
@@ -90,4 +90,5 @@ let chart () =
             ]
         ]
     ]
+
 ```

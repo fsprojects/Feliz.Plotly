@@ -1,4 +1,4 @@
-﻿# Feliz.Plotly - Tables
+# Feliz.Plotly - Tables
 
 Taken from [Plotly - Tables](https://plot.ly/javascript/table/)
 
@@ -20,11 +20,11 @@ let values =
 let headers =
     [ [ "<b>EXPENSES</b>" ]
       [ "<b>Q1</b>" ]
-      [ "<b>Q2</b>" ] 
+      [ "<b>Q2</b>" ]
       [ "<b>Q3</b>" ]
       [ "<b>Q4</b>" ] ]
 
-let chart () =
+let chart () : ReactElement =
     Plotly.plot [
         plot.traces [
             traces.table [
@@ -63,4 +63,5 @@ let chart () =
             layout.height 350
         ]
     ]
+
 ```

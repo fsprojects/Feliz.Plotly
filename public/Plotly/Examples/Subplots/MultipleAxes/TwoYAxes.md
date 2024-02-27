@@ -1,4 +1,4 @@
-﻿# Feliz.Plotly - Multiple Axes
+# Feliz.Plotly - Multiple Axes
 
 Taken from [Plotly - Multiple Axes](https://plot.ly/javascript/multiple-axes/)
 
@@ -9,7 +9,7 @@ module Samples.MultipleAxes.TwoYAxes
 open Feliz
 open Feliz.Plotly
 
-let chart () =
+let chart () : ReactElement =
     Plotly.plot [
         plot.traces [
             traces.scatter [
@@ -48,4 +48,5 @@ let chart () =
             ])
         ]
     ]
+
 ```

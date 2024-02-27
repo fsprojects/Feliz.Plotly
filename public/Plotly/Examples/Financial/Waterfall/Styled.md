@@ -1,4 +1,4 @@
-﻿# Feliz.Plotly - Waterfall Charts
+# Feliz.Plotly - Waterfall Charts
 
 Taken from [Plotly - Waterfall Charts](https://plot.ly/javascript/waterfall-charts/)
 
@@ -9,11 +9,11 @@ module Samples.Waterfall.Styled
 open Feliz
 open Feliz.Plotly
 
-let xData = 
+let xData =
     [ ["2016"; "2017"; "2017"; "2017"; "2017"; "2018"; "2018"; "2018"; "2018"];
       ["initial"; "q1"; "q2"; "q3"; "total"; "q1"; "q2"; "q3"; "total" ] ]
 
-let measureData = 
+let measureData : IMeasureProperty list =
     [ measure.absolute; measure.relative; measure.relative
       measure.relative; measure.total; measure.relative
       measure.relative; measure.relative; measure.total ]
@@ -22,7 +22,7 @@ let yData =
     [ Some 10; Some 20; Some 30; Some -10
       None; Some 10; Some 20; Some -40; None ]
 
-let chart () =
+let chart () : ReactElement =
     Plotly.plot [
         plot.traces [
             traces.waterfall [
@@ -41,7 +41,7 @@ let chart () =
                 ]
                 waterfall.increasing [
                     increasing.marker [
-                        marker.color color.teal   
+                        marker.color color.teal
                     ]
                 ]
                 waterfall.totals [
@@ -71,4 +71,5 @@ let chart () =
             ]
         ]
     ]
+
 ```

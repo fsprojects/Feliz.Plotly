@@ -1,4 +1,4 @@
-﻿# Feliz.Plotly - Horizontal Bar Charts
+# Feliz.Plotly - Horizontal Bar Charts
 
 Taken from [Plotly - Horizontal Bar Charts](https://plot.ly/javascript/horizontal-bar-charts/)
 
@@ -9,7 +9,7 @@ module Samples.HorizontalBar.Basic
 open Feliz
 open Feliz.Plotly
 
-let chart () =
+let chart () : ReactElement =
     Plotly.plot [
         plot.traces [
             traces.bar [
@@ -19,4 +19,5 @@ let chart () =
             ]
         ]
     ]
+
 ```

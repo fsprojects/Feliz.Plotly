@@ -1,4 +1,4 @@
-﻿# Feliz.Plotly - Waterfall Charts
+# Feliz.Plotly - Waterfall Charts
 
 Taken from [Plotly - Waterfall Charts](https://plot.ly/javascript/waterfall-charts/)
 
@@ -9,7 +9,7 @@ module Samples.Waterfall.Basic
 open Feliz
 open Feliz.Plotly
 
-let chart () =
+let chart () : ReactElement =
     Plotly.plot [
         plot.traces [
             traces.waterfall [
@@ -63,4 +63,5 @@ let chart () =
             layout.showlegend true
         ]
     ]
+
 ```

@@ -16,7 +16,7 @@ let yData, yData2 =
     |> List.map (fun _ -> (rng.NextDouble(), (rng.NextDouble()+0.1)))
     |> List.unzip
 
-let chart () =
+let chart () : ReactElement =
     Plotly.plot [
         plot.traces [
             traces.box [
@@ -27,4 +27,5 @@ let chart () =
             ]
         ]
     ]
+
 ```

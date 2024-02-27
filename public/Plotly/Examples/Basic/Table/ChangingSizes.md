@@ -1,4 +1,4 @@
-﻿# Feliz.Plotly - Tables
+# Feliz.Plotly - Tables
 
 Taken from [Plotly - Tables](https://plot.ly/javascript/table/)
 
@@ -6,7 +6,6 @@ Taken from [Plotly - Tables](https://plot.ly/javascript/table/)
 [<RequireQualifiedAccess>]
 module Samples.Table.ChangingSizes
 
-open Fable.Core
 open Feliz
 open Feliz.Plotly
 
@@ -22,7 +21,7 @@ let headers =
     [ [ "<b>EXPENSES</b><br>as of July 2017" ]
       [ "<b>DESCRIPTION</b>" ] ]
 
-let chart () =
+let chart () : ReactElement =
     Plotly.plot [
         plot.traces [
             traces.table [
@@ -73,4 +72,5 @@ let chart () =
             layout.width 1000
         ]
     ]
+
 ```

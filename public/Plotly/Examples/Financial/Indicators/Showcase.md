@@ -1,4 +1,4 @@
-﻿# Feliz.Plotly - Indicators
+# Feliz.Plotly - Indicators
 
 Taken from [Plotly - Indicators](https://plot.ly/javascript/indicator/)
 
@@ -9,7 +9,7 @@ module Samples.Indicators.Showcase
 open Feliz
 open Feliz.Plotly
 
-let chart () =
+let chart () : ReactElement =
     Plotly.plot [
         plot.traces [
             traces.indicator [
@@ -89,4 +89,5 @@ let chart () =
             ]
         ]
     ]
+
 ```
