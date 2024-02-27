@@ -25,6 +25,10 @@ jobs:
       with:
         node-version: latest
         check-latest: true
+    - name: Set git name and email
+      run: |
+        git config --global user.name "GitHub Actions"
+        git config --global user.email "github-actions@github.com"
     - name: Install Yarn
       run: npm install -g yarn
     - name: Restore dependencies
@@ -35,11 +39,5 @@ jobs:
         yarn install
     - name: Build dotnet projects
       run: dotnet build --no-restore
-    - name: List directory
-      run: ls -la
-    - name: List parent directory
-      run: ls .. -la
-    - name: See current directory
-      run: pwd
     - name: Publish documentation to gh-pages
       run: yarn publish-docs
