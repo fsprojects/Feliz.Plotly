@@ -53,10 +53,6 @@ jobs:
       run: dotnet build --no-restore
     - name: Build docs
       run: yarn build
-    - name: List directory
-      run: ls -al
-    - name: List directory
-      run: ls -al dist
     - name: Deploy docs
       uses: peaceiris/actions-gh-pages@v3
       if: github.ref == 'refs/heads/main'
