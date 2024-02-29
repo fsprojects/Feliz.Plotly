@@ -407,6 +407,7 @@ let samples : (string * ReactElement) list =
 let codeBlockRenderer (codeProps: Markdown.ICodeProperties) : ReactElement =
     let className = codeProps.className
 
+    // eg "fsharp:plotly-chart-scatter-basic"
     if className <> null && className.Contains(":") then
         let languageParts = className.Split(':')
         let sampleName = languageParts[1]
