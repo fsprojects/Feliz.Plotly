@@ -36,4 +36,4 @@ jobs:
     - name: Pack dotnet projects
       run: yarn dotnet-pack
     - name: Publish to NuGet
-      run: dotnet push --source https://api.nuget.org/v3/index.json --api-key ${{ secrets.NUGET_API_KEY }} *.nupkg
+      run: dotnet nuget push --source https://api.nuget.org/v3/index.json --api-key ${{ secrets.NUGET_API_KEY }} *.nupkg
