@@ -1,6 +1,6 @@
 # Feliz.Plotly [![Nuget](https://img.shields.io/nuget/v/Feliz.Plotly.svg?maxAge=0&colorB=brightgreen)](https://www.nuget.org/packages/Feliz.Plotly)
 
-Fable bindings for [plotly.js](https://github.com/plotly/plotly.js) and [react-plotly.js](https://github.com/plotly/react-plotly.js) with [Feliz](https://github.com/Zaid-Ajaj/Feliz) style api for use within React applications.
+Fable bindings for [plotly.js](https://github.com/plotly/plotly.js) and [react-plotly.js](https://github.com/plotly/react-plotly.js) with [Feliz](https://github.com/Zaid-Ajaj/Feliz) style api for use within React applications. This repo continues [Shmew's](https://github.com/Shmew/) excellent work, forked from [here](https://github.com/Shmew/Feliz.Plotly).
 
 Lets you build visualizations in an easy, discoverable, and safe fashion.
 
@@ -35,3 +35,15 @@ Plotly.plot [
     ]
 ]
 ```
+
+## Architecture / Code Layout
+
+This repo has three main projects:
+
+1. `Feliz.Generator.Plotly` - Used to generate the `Feliz.Plotly` project.
+2. `Feliz.Plotly` - The generated project resulting from running the generator
+3. `App` - This is the application used to display documentation for `Feliz.Plotly`.
+
+## Development / Contributing
+
+This repository makes extensive use of `vscode`'s development containers feature. You can use this with Github codespaces to boot up a development environment in your browser.
