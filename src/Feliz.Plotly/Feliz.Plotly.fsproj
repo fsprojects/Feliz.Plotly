@@ -5,6 +5,18 @@
     <PackageId>Feliz.Plotly.V2</PackageId>
     <TargetFramework>netstandard2.0</TargetFramework>
     <Version>2.28.0</Version>
+    <PackageReadmeFile>readme.md</PackageReadmeFile>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <Authors>Kurt Mueller</Authors>
+    <PackageTags>fsharp fable react visualization graph chart</PackageTags>
+    <PackageDescription>Fable bindings written in the Feliz-style for plotly.js</PackageDescription>
+    <!-- you can fill in this property with whatever release notes you want users to see on
+    NuGet.Org -->
+    <PackageReleaseNotes></PackageReleaseNotes>
+    <!-- We don't care about the size of the .NET dll, since user apps are going to use the 
+      compiled JS, so just embed the PDB in the DLL so users can go-to-definition right to the source code -->
+    <DebugType>embedded</DebugType>
+   <EmbedUntrackedSources>true</EmbedUntrackedSources>
   </PropertyGroup>
 
   <ItemGroup>
@@ -22,8 +34,30 @@
     <Compile Include="Plotly.fs" />
     <Compile Include="PlotlyFunctions.fs" />
     <None Include="paket.references" />
-    <None Include="paket.template" />
-    <None Include="../../readme.md" Pack="true" PackagePath="/"/>
+    <None
+        Include="../../readme.md"
+        Pack="true"
+        PackagePath="/" />
+  </ItemGroup>
+
+  <ItemGroup Label="Fable compilation items">
+    <!-- Fable needs the sources, as well as any generated JS files, to end up in the `fable`
+    directory of the package. The paket.template in this repo specifies
+      * source files
+      * project file
+      * JS files in the Locales directory => fable/Locales -->
+    <Content
+        Include="@(Compile)"
+        Pack="true"
+        PackagePath="fable/%(RelativeDir)%(Filename)%(Extension)" />
+    <Content
+        Include="$(MSBuildThisFileFullPath)"
+        Pack="true"
+        PackagePath="fable/" />
+    <Content
+        Include="Locales/*.js"
+        Pack="true"
+        PackagePath="fable/%(RelativeDir)%(Filename)%(Extension)" />
   </ItemGroup>
 
   <PropertyGroup>
@@ -31,6 +65,14 @@
     <NpmDependencies>
       <NpmPackage Name="plotly.js" Version="gte 2.28.0 lt 3" ResolutionStrategy="max" />
       <NpmPackage Name="react-plotly.js" Version="gte 2.6.0 lt 3" ResolutionStrategy="max" />
+      <NpmPackage
+          Name="plotly.js"
+          Version="gte 2.0.0 lt 3"
+          ResolutionStrategy="max" />
+      <NpmPackage
+          Name="react-plotly.js"
+          Version="gte 2.5 lt 3"
+          ResolutionStrategy="max" />
     </NpmDependencies>
     <PackageReadmeFile>readme.md</PackageReadmeFile>
   </PropertyGroup>
