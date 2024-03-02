@@ -4,7 +4,7 @@
     <OutputType>Library</OutputType>
     <PackageId>Feliz.Plotly.V2</PackageId>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <Version>2.28.0</Version>
+    <Version>2.28.1</Version>
     <PackageReadmeFile>readme.md</PackageReadmeFile>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <Authors>Kurt Mueller</Authors>
@@ -13,7 +13,7 @@
     <!-- you can fill in this property with whatever release notes you want users to see on
     NuGet.Org -->
     <PackageReleaseNotes></PackageReleaseNotes>
-    <!-- We don't care about the size of the .NET dll, since user apps are going to use the 
+    <!-- We don't care about the size of the .NET dll, since user apps are going to use the
       compiled JS, so just embed the PDB in the DLL so users can go-to-definition right to the source code -->
     <DebugType>embedded</DebugType>
    <EmbedUntrackedSources>true</EmbedUntrackedSources>
@@ -63,15 +63,13 @@
   <PropertyGroup>
     <!-- allows the `femto` tool to pick up the necessary requirements -->
     <NpmDependencies>
-      <NpmPackage Name="plotly.js" Version="gte 2.28.0 lt 3" ResolutionStrategy="max" />
-      <NpmPackage Name="react-plotly.js" Version="gte 2.6.0 lt 3" ResolutionStrategy="max" />
       <NpmPackage
           Name="plotly.js"
-          Version="gte 2.0.0 lt 3"
+          Version="gte 2.28.0 lt 3"
           ResolutionStrategy="max" />
       <NpmPackage
           Name="react-plotly.js"
-          Version="gte 2.5 lt 3"
+          Version="gte 2.6 lt 3"
           ResolutionStrategy="max" />
     </NpmDependencies>
     <PackageReadmeFile>readme.md</PackageReadmeFile>
