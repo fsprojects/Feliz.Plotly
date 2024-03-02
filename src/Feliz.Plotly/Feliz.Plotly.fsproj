@@ -17,6 +17,7 @@
       compiled JS, so just embed the PDB in the DLL so users can go-to-definition right to the source code -->
     <DebugType>embedded</DebugType>
    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+   <PublishRepositoryUrl>true</PublishRepositoryUrl>
   </PropertyGroup>
 
   <ItemGroup>
